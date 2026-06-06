@@ -1,21 +1,43 @@
 const UsuarioDAO = require('../daos/usuarioDAO');
-const Usuario = require('../models/usuarioModel');
-
-const usuarioDAO = new UsuarioDAO();
+const validator = require('validator');
 
 class UsuarioService {
-    constructor(usuarioDAO) {
-        this.usuarioDAO = usuarioDAO;
+    constructor() {
+        this.usuarioDAO = new UsuarioDAO();
     }
 
-    cadastrarUsuario(nome, email, senha) {
-        if(!email.includes('@')) {
-            throw new Error('Email inválido');
+    async login(email, senha) {
+        const usuario = await this.usuarioDAO.buscarUsuarioPorEmail(email);
+        if(!usuario) {
+            throw new Error('E-mail ou senha inválidos');
         }
 
-        const usuario = new Usuario(nome, email, senha);
+        if(usuario.senha !== senha) {
+            throw new Error('E-mail ou senha inválidos');
+        }
 
-        this.usuarioDAO.adicionarUsuario(usuario);
+        return usuario;
+    }
+
+    async cadastrarUsuario(usuario) {
+        if (!usuario.nome || !usuario.email || !usuario.senha) {
+            throw new Error('Todos os campos são obrigatórios!');
+        }
+
+        if (!validator.isEmail(usuario.email)) {
+            throw new Error('Insira um email válido!');
+        }
+
+        const emailExistente = await this.usuarioDAO.buscarUsuarioPorEmail(usuario.email)
+        if(emailExistente) {
+            throw new Error('Email já cadastrado!')
+        }
+
+        if(usuario.senha.length < 8) {
+            throw new Error('Senha deve ter pelo menos 8 caracteres');
+        }
+
+        return await this.usuarioDAO.adicionarUsuario(usuario);
     }
 }
 
