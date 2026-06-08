@@ -1,3 +1,5 @@
+const validator = require('validator');
+
 class Usuario {
     #id
     #nome
@@ -23,18 +25,25 @@ class Usuario {
         return this.#email;
     }
 
-    set nome(novo_nome) {
-        if(!novo_nome) {
+    set nome(novoNome) {
+        if(!novoNome || novoNome.trim() === "") {
             throw new Error("Insira um nome")
         }
-        this.#nome = novo_nome;
+        this.#nome = novoNome;
     }
 
-    set email(novo_email) {
-        if (!novo_email.includes("@")) {
+    set email(novoEmail) {
+        if (!validator.isEmail(novoEmail)) {
             throw new Error("Email inválido!");
         }
-        this.#email = novo_email;
+        this.#email = novoEmail;
+    }
+
+    set senha(novaSenha) {
+        if (!novaSenha || novaSenha.length < 8) {
+            throw new Error("Senha inválida");
+        }
+        this.#senha = novaSenha;
     }
 
     alterarSenha(senhaAtual, novaSenha) {
