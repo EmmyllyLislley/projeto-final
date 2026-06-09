@@ -7,7 +7,6 @@ class UsuarioController {
 
     async cadastrar(req, res) {
         try {
-<<<<<<< HEAD
             const {nome, email, senha} = req.body;
 
             const usuario = await this.usuarioService.cadastrarUsuario(nome, email, senha);
@@ -26,7 +25,7 @@ class UsuarioController {
             const usuario = await this.usuarioService.buscarUsuarioPorId(id);
 
             res.send(usuario);
-            
+
         } catch(err) {
             res.send(err.message);
         }
@@ -65,36 +64,6 @@ class UsuarioController {
 
         } catch(err) {
             res.send(err.message);
-=======
-            const usuario = await this.usuarioService.cadastrarUsuario(req.body);
-            res.json({
-                mensagem: 'Usuário cadastrado com sucesso!',
-                usuario
-            });
-
-        } catch(err) {
-            res.json({
-                erro: err.message
-            });
-
-        }
-    }
-
-    async login(req, res) {
-        try {
-            const usuario = await this.usuarioService.login(req.body.email, req.body.senha);
-            res.json({
-                mensagem: 'Login realizado com sucesso!',
-                usuario
-            });
-        } 
-        
-        catch(err) {
-            res.json({
-                erro: err.message
-            });
-
->>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
         }
     }
 }
