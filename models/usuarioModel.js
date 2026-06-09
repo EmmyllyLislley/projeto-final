@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 const validator = require('validator');
 
 class UsuarioModel {
+=======
+class Usuario {
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
     #id
     #nome
     #email
     #senha
 
+<<<<<<< HEAD
     constructor(id, nome, email, senha) {
         this.#id = id;
+=======
+    constructor(nome, email, senha) {
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
         this.#nome = nome;
         this.#email = email;
         this.#senha = senha;
@@ -29,6 +37,7 @@ class UsuarioModel {
         return this.#senha;
     }
 
+<<<<<<< HEAD
     set nome(nome) {
         if(!nome || nome.trim() === "") {
             throw new Error("Insira um nome")
@@ -48,6 +57,20 @@ class UsuarioModel {
             throw new Error("Senha inválida");
         }
         this.#senha = novaSenha;
+=======
+    set nome(novo_nome) {
+        if(!novo_nome) {
+            throw new Error("Insira um nome")
+        }
+        this.#nome = novo_nome;
+    }
+
+    set email(novo_email) {
+        if (!novo_email.includes("@")) {
+            throw new Error("Email inválido!");
+        }
+        this.#email = novo_email;
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
     }
 
     alterarSenha(senhaAtual, novaSenha) {
@@ -58,4 +81,8 @@ class UsuarioModel {
     }
 }
 
+<<<<<<< HEAD
 module.exports = UsuarioModel;
+=======
+module.exports = Usuario;
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52

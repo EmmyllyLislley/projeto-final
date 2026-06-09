@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const TituloModel = require('./TituloModel');
 
 class SerieModel extends TituloModel {
@@ -9,12 +10,25 @@ class SerieModel extends TituloModel {
 
         this.#temporadas = temporadas;
         this.#episodios = episodios;
+=======
+const Titulo = require('./tituloModel');
+
+class Serie extends Titulo {
+    #temporadas
+    #totalEpisodios
+
+    constructor(nome, dataLancamento, diretor, classificacaoIndicativa, temporadas, totalEpisodios) {
+        super(nome, dataLancamento, diretor, classificacaoIndicativa);
+        this.#temporadas = temporadas;
+        this.#totalEpisodios = totalEpisodios;
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
     }
 
     get temporadas() {
         return this.#temporadas;
     }
 
+<<<<<<< HEAD
     get episodios() {
         return this.#episodios;
     }
@@ -35,3 +49,19 @@ class SerieModel extends TituloModel {
 }
 
 module.exports = SerieModel;
+=======
+    get totalEpisodios() {
+        return this.#totalEpisodios;
+    }
+
+    set temporadas(novasTemporadas) {
+        this.#temporadas = novasTemporadas;
+    }
+
+    set totalEpisodios(novoTotalEpisodios) {
+        this.#totalEpisodios = novoTotalEpisodios;
+    }
+}
+
+module.exports = Serie;
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52

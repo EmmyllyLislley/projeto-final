@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class AvaliacaoModel {
     #id;
     #usuario;
@@ -7,6 +8,18 @@ class AvaliacaoModel {
     constructor(id, usuario, nota, critica) {
         this.#id = id;
         this.#usuario = usuario;
+=======
+class Avaliacao {
+    #id
+    #usuario
+    #titulo 
+    #nota 
+    #critica 
+
+    constructor(usuario, titulo, nota, critica) {
+        this.#usuario = usuario;
+        this.#titulo = titulo;
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
         this.#nota = nota;
         this.#critica = critica;
     }
@@ -19,6 +32,13 @@ class AvaliacaoModel {
         return this.#usuario;
     }
 
+<<<<<<< HEAD
+=======
+    get titulo() {
+        return this.#titulo;
+    }
+
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
     get nota() {
         return this.#nota;
     }
@@ -27,6 +47,7 @@ class AvaliacaoModel {
         return this.#critica;
     }
 
+<<<<<<< HEAD
     set usuario(usuario) {
         if (!usuario) {
             throw new Error("Usuário obrigatório.");
@@ -50,3 +71,15 @@ class AvaliacaoModel {
 }
 
 module.exports = AvaliacaoModel;
+=======
+    set nota(novaNota) {
+        this.#nota = novaNota;
+    }
+
+    set critica(novaCritica) {
+        this.#critica = novaCritica;
+    }
+}
+
+module.exports = Avaliacao;
+>>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
