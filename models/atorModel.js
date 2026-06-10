@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 class AtorModel {
     #id;
     #nome;
@@ -10,14 +9,6 @@ class AtorModel {
         this.#nome = nome;
         this.#dataNascimento = dataNascimento;
         this.#nacionalidade = nacionalidade;
-=======
-class Ator {
-    #id 
-    #nome
-
-    constructor(nome) {
-        this.#nome = nome;
->>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
     }
 
     get id() {
@@ -28,7 +19,6 @@ class Ator {
         return this.#nome;
     }
 
-<<<<<<< HEAD
     get dataNascimento() {
         return this.#dataNascimento;
     }
@@ -61,11 +51,3 @@ class Ator {
 }
 
 module.exports = AtorModel;
-=======
-    set nome(novoNome) {
-        this.#nome = novoNome;
-    }
-}
-
-module.exports = Ator;
->>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52

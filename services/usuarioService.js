@@ -1,8 +1,7 @@
+const jwt = require('jsonwebtoken');
+
 const UsuarioModel = require('../models/UsuarioModel');
 const UsuarioDAO = require('../repository/UsuarioDAO');
-
-const UsuarioDAO = require('../daos/usuarioDAO');
-
 
 class UsuarioService {
     constructor() {
@@ -20,10 +19,24 @@ class UsuarioService {
         return usuario;
     }
 
-    async alterarSenha(id, senhaAtual, novaSenha) {
-        const usuario = await this.usuarioDAO.buscarUsuarioPorId(id);
+    async login(email, senha) {
+        const usuario = await this.usuarioDAO.buscarUsuarioPorEmail(email);
 
         if (!usuario) {
+            throw new Error("Usuário não encontrado.");
+        }
+
+        if (!senha) {
+            throw new Error("Senha inválida.");
+        }
+
+        return(usuario);
+    }
+
+    async alterarSenha(id, senhaAtual, novaSenha) {
+        const usuarioId = await this.usuarioDAO.buscarUsuarioPorId(id);
+
+        if (!usuarioId) {
             throw new Error("Usuário não encontrado.");
         }
 

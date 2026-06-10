@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 class ListaModel {
-=======
-class Lista {
->>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52
     #id 
     #nome
     #usuario
@@ -33,18 +29,6 @@ class Lista {
     set nome(novoNome) {
         this.#nome = novoNome;
     }
-<<<<<<< HEAD
 }
 
 module.exports = ListaModel;
-=======
-
-    adicionarTitulo(titulo) {
-        this.#titulos.push(titulo);
-    }
-    
-    removerTitulo() {}
-}
-
-module.exports = Lista;
->>>>>>> cb761d988d34a99c583e387b260e48aaea97ad52

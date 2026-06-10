@@ -18,6 +18,24 @@ class UsuarioController {
         }
     }
 
+    async login(req, res) {
+        try {
+            const { email, senha } = req.body;
+
+            const resultado = await this.usuarioService.login(email, senha);
+
+            return res.json({
+                mensagem: "Login realizado com sucesso!",
+                ...resultado
+            });
+
+        } catch (err) {
+            return res.status(401).json({
+                erro: err.message
+            });
+        }
+    }
+
     async buscarPorId(req, res) {
         try {
             const {id} = req.params;
