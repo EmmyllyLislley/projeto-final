@@ -30,7 +30,7 @@ class UsuarioService {
             throw new Error("Senha inválida.");
         }
 
-        return(usuario);
+        return usuario;
     }
 
     async alterarSenha(id, senhaAtual, novaSenha) {
