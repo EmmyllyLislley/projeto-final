@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineLog</title>
+
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+
+  <!-- TELA DE LOGIN -->
+  <div class="login-page on" id="loginPage">
+    <div class="login-bg">
+      <div class="login-glow"></div>
+      <div class="login-film-strip">
+        <div class="film-col">
+          <div class="film-poster fp1"><img src="https://image.tmdb.org/t/p/w300/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" alt="" /></div>
+          <div class="film-poster fp2"><img src="https://image.tmdb.org/t/p/w300/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" alt="" /></div>
+          <div class="film-poster fp3"><img src="https://image.tmdb.org/t/p/w300/kCGlIMHnOm8JPXi6m1QERGL0aDY.jpg" alt="" /></div>
+          <div class="film-poster fp4"><img src="https://image.tmdb.org/t/p/w300/cdqLnri3NEGcmfnqwk2TSIYtddg.jpg" alt="" /></div>
+        </div>
+        <div class="film-col">
+          <div class="film-poster fp5"><img src="https://image.tmdb.org/t/p/w300/2JyXber2oSlnSyqDOsgXLBBy5GG.jpg" alt="" /></div>
+          <div class="film-poster fp6"><img src="https://image.tmdb.org/t/p/w300/sHFlbKS3WLqMnp9t2ghADIJFnuB.jpg" alt="" /></div>
+          <div class="film-poster fp7"><img src="https://image.tmdb.org/t/p/w300/e2X0x9Vr3OaVGPABmaz0qN1lw1J.jpg" alt="" /></div>
+          <div class="film-poster fp8"><img src="https://image.tmdb.org/t/p/w300/7O8DSrlEAfR07RDMJLHKBLZE3xN.jpg" alt="" /></div>
+        </div>
+        <div class="film-col">
+          <div class="film-poster fp3"><img src="https://image.tmdb.org/t/p/w300/cdqLnri3NEGcmfnqwk2TSIYtddg.jpg" alt="" /></div>
+          <div class="film-poster fp1"><img src="https://image.tmdb.org/t/p/w300/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" alt="" /></div>
+          <div class="film-poster fp4"><img src="https://image.tmdb.org/t/p/w300/kCGlIMHnOm8JPXi6m1QERGL0aDY.jpg" alt="" /></div>
+          <div class="film-poster fp2"><img src="https://image.tmdb.org/t/p/w300/2JyXber2oSlnSyqDOsgXLBBy5GG.jpg" alt="" /></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-left">
+      <div class="login-logo">
+        <div class="login-logo-icon">🎬</div>
+        <div class="login-logo-text">CINE<span>LOG</span></div>
+      </div>
+      <h2 class="login-tagline">Seu <span class="acc">Catálogo</span><br>de Filmes</h2>
+      <p class="login-sub">Catalogue, avalie e descubra os melhores<br>filmes e séries com quem compartilha seus gostos.</p>
+
+      <div class="login-card">
+        <div class="login-tabs">
+          <button class="ltab on" onclick="switchLoginTab('login')">Entrar</button>
+          <button class="ltab" onclick="switchLoginTab('register')">Criar Conta</button>
+        </div>
+
+        <!-- Formulário de login -->
+        <div class="lform on" id="lf-login">
+          <div class="fg">
+            <label class="flabel">Email</label>
+            <input class="finput" id="l-email" type="email" placeholder="seu@email.com" />
+          </div>
+          <div class="fg">
+            <label class="flabel">Senha</label>
+            <input class="finput" id="l-pass" type="password" placeholder="••••••••" />
+          </div>
+          <div class="ferr" id="l-err"></div>
+          <button class="submit-btn" onclick="doLogin()">Entrar →</button>
+          <p class="demo-hint">Demo: <span onclick="demoLogin()">usar conta de demonstração</span></p>
+        </div>
+
+        <!-- Formulário de cadastro -->
+        <div class="lform" id="lf-register">
+          <div class="fg">
+            <label class="flabel">Username</label>
+            <input class="finput" id="r-user" type="text" placeholder="@seu_username" />
+          </div>
+          <div class="fg">
+            <label class="flabel">Email</label>
+            <input class="finput" id="r-email" type="email" placeholder="seu@email.com" />
+          </div>
+          <div class="fg">
+            <label class="flabel">Senha</label>
+            <input class="finput" id="r-pass" type="password" placeholder="Mínimo 6 caracteres" />
+          </div>
+          <div class="ferr" id="r-err"></div>
+          <button class="submit-btn" onclick="doRegister()">Criar Conta →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════ -->
+  <nav class="nav" id="mainNav" style="display:none">
+    <a class="logo" onclick="goPage('home')">
+      <div class="logo-icon">🎬</div>
+      <span class="logo-text">CINE<span>LOG</span></span>
+    </a>
+    <div class="nav-search">
+      <span class="nav-search-icon">🔍</span>
+      <input type="text" id="gsearch" placeholder="Buscar filmes, séries, diretores…" autocomplete="off" />
+    </div>
+    <div class="nav-links" id="navLinks"></div>
+  </nav>
+
+  <!-- ════════════════════════════════════════
+       PÁGINAS
+  ════════════════════════════════════════ -->
+
+  <!-- Home -->
+  <div class="page" id="page-home">
+    <div class="hero">
+      <div class="hero-glow"></div>
+      <h1>Seu <span class="acc">Cinema</span><br>Pessoal</h1>
+      <p>Catalogue, avalie e descubra filmes e séries. Acompanhe o que assistiu e o que ainda quer ver.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-pri" onclick="goPage('catalog')">🎬 Explorar Catálogo</button>
+        <button class="btn btn-out" onclick="goPage('watchlists')">📋 Minhas Listas</button>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="sec" id="rec-sec" style="display:none">
+        <div class="sec-head">
+          <h2 class="sec-title">✨ Recomendados</h2>
+          <span class="sec-link" onclick="goPage('catalog')">Ver todos →</span>
+        </div>
+        <div class="tgrid" id="rec-grid"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-head">
+          <h2 class="sec-title">🔥 Em Destaque</h2>
+          <span class="sec-link" onclick="goPage('catalog')">Ver todos →</span>
+        </div>
+        <div class="tgrid" id="home-all"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-head">
+          <h2 class="sec-title">🎬 Filmes</h2>
+          <span class="sec-link" onclick="goPageCat('movie')">Ver todos →</span>
+        </div>
+        <div class="tgrid" id="home-movies"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-head">
+          <h2 class="sec-title">📺 Séries</h2>
+          <span class="sec-link" onclick="goPageCat('series')">Ver todos →</span>
+        </div>
+        <div class="tgrid" id="home-series"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Catálogo -->
+  <div class="page" id="page-catalog">
+    <div class="wrap" style="padding-top:1.8rem">
+      <div class="sec-head" style="margin-bottom:.9rem">
+        <h2 class="sec-title">📽 Catálogo</h2>
+        <button class="btn btn-pri btn-sm" id="addTitleBtn" style="display:none" onclick="openModal('m-add')">＋ Adicionar</button>
+      </div>
+      <div class="filter-bar">
+        <button class="chip on" data-t="">Todos</button>
+        <button class="chip" data-t="movie">🎬 Filmes</button>
+        <button class="chip" data-t="series">📺 Séries</button>
+        <select class="fsel" id="genreF">
+          <option value="">Todos os gêneros</option>
+          <option>Ação</option>
+          <option>Aventura</option>
+          <option>Animação</option>
+          <option>Biografia</option>
+          <option>Comédia</option>
+          <option>Drama</option>
+          <option>Fantasia</option>
+          <option>Ficção Científica</option>
+          <option>Horror</option>
+          <option>Mistério</option>
+          <option>Romance</option>
+          <option>Suspense</option>
+          <option>Terror</option>
+        </select>
+      </div>
+      <div class="tgrid" id="cat-grid"></div>
+      <div class="empty" id="cat-empty" style="display:none">
+        <span class="empty-ico">🎭</span>
+        <h3>Nenhum título</h3>
+        <p>Tente outros filtros ou adicione novos títulos.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalhe do título -->
+  <div class="page" id="page-detail">
+    <div id="detail-root"></div>
+  </div>
+
+  <!-- Watchlists -->
+  <div class="page" id="page-watchlists">
+    <div class="wrap" style="padding-top:1.8rem">
+      <div class="sec-head" style="margin-bottom:1.4rem">
+        <h2 class="sec-title">📋 Minhas Listas</h2>
+        <button class="btn btn-pri btn-sm" onclick="openModal('m-newlist')">＋ Nova Lista</button>
+      </div>
+      <div id="wl-root"></div>
+    </div>
+  </div>
+
+  <!-- Detalhe da lista -->
+  <div class="page" id="page-listdetail">
+    <div id="listdetail-root"></div>
+  </div>
+
+  <!-- Perfil -->
+  <div class="page" id="page-profile" style="padding:0">
+    <div id="profile-root"></div>
+  </div>
+
+  <!-- Busca -->
+  <div class="page" id="page-search">
+    <div class="wrap" style="padding-top:1.8rem">
+      <div class="sec-head" style="margin-bottom:1.4rem">
+        <h2 class="sec-title" id="srch-title">Resultados</h2>
+      </div>
+      <div class="tgrid" id="srch-grid"></div>
+      <div class="empty" id="srch-empty" style="display:none">
+        <span class="empty-ico">🔍</span>
+        <h3>Nada encontrado</h3>
+        <p>Tente outras palavras-chave.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       MODAIS
+  ════════════════════════════════════════ -->
+
+  <!-- Adicionar título -->
+  <div class="overlay" id="m-add">
+    <div class="modal" style="max-width:620px">
+      <div class="mhead">
+        <h2 class="mtitle">Adicionar Título</h2>
+        <button class="mclose" onclick="closeModal('m-add')">✕</button>
+      </div>
+      <div class="mbody">
+        <div class="frow">
+          <div class="fg"><label class="flabel">Título *</label><input class="finput" id="at-title" placeholder="Nome" /></div>
+          <div class="fg"><label class="flabel">Título Original</label><input class="finput" id="at-og" placeholder="Original title" /></div>
+        </div>
+        <div class="frow">
+          <div class="fg">
+            <label class="flabel">Tipo *</label>
+            <select class="fsel2" id="at-type">
+              <option value="movie">🎬 Filme</option>
+              <option value="series">📺 Série</option>
+            </select>
+          </div>
+          <div class="fg"><label class="flabel">Ano</label><input class="finput" id="at-year" type="number" placeholder="2024" /></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="flabel">Diretor(a)</label><input class="finput" id="at-dir" placeholder="Nome" /></div>
+          <div class="fg"><label class="flabel">Duração (min/ep)</label><input class="finput" id="at-dur" type="number" placeholder="120" /></div>
+        </div>
+        <div class="fg"><label class="flabel">Elenco (vírgula)</label><input class="finput" id="at-cast" placeholder="Ator 1, Atriz 2" /></div>
+        <div class="fg"><label class="flabel">Gêneros (vírgula)</label><input class="finput" id="at-genres" placeholder="Drama, Thriller" /></div>
+        <div class="fg"><label class="flabel">URL do Poster</label><input class="finput" id="at-poster" type="url" placeholder="https://…" /></div>
+        <div class="frow">
+          <div class="fg"><label class="flabel">País</label><input class="finput" id="at-country" placeholder="Brasil" /></div>
+          <div class="fg"><label class="flabel">Idioma</label><input class="finput" id="at-lang" placeholder="Português" /></div>
+        </div>
+        <div class="fg"><label class="flabel">Sinopse</label><textarea class="ftarea" id="at-synopsis" placeholder="Descrição breve…"></textarea></div>
+      </div>
+      <div class="mfoot">
+        <button class="btn btn-out btn-sm" onclick="closeModal('m-add')">Cancelar</button>
+        <button class="btn btn-pri btn-sm" onclick="doAddTitle()">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avaliação -->
+  <div class="overlay" id="m-review">
+    <div class="modal">
+      <div class="mhead">
+        <h2 class="mtitle" id="rev-modal-title">Avaliar</h2>
+        <button class="mclose" onclick="closeModal('m-review')">✕</button>
+      </div>
+      <div class="mbody">
+        <div class="fg">
+          <label class="flabel">Avaliação</label>
+          <div class="star-pick" id="starPick">
+            <input type="radio" name="rv" id="s5"  value="5"  /><label for="s5">★</label>
+            <input type="radio" name="rv" id="s45" value="4.5"/><label for="s45">★</label>
+            <input type="radio" name="rv" id="s4"  value="4"  /><label for="s4">★</label>
+            <input type="radio" name="rv" id="s35" value="3.5"/><label for="s35">★</label>
+            <input type="radio" name="rv" id="s3"  value="3"  /><label for="s3">★</label>
+            <input type="radio" name="rv" id="s25" value="2.5"/><label for="s25">★</label>
+            <input type="radio" name="rv" id="s2"  value="2"  /><label for="s2">★</label>
+            <input type="radio" name="rv" id="s15" value="1.5"/><label for="s15">★</label>
+            <input type="radio" name="rv" id="s1"  value="1"  /><label for="s1">★</label>
+            <input type="radio" name="rv" id="s05" value="0.5"/><label for="s05">★</label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="flabel">Crítica (opcional)</label>
+          <textarea class="ftarea" id="rv-text" placeholder="Sua opinião sobre o título…"></textarea>
+        </div>
+        <div class="fg">
+          <label class="flabel">Data que assistiu</label>
+          <input class="finput" id="rv-date" type="date" />
+        </div>
+        <div style="display:flex;gap:1.4rem;margin-top:6px">
+          <label class="fchk-row"><input type="checkbox" id="rv-spoiler" /> Contém spoiler</label>
+          <label class="fchk-row"><input type="checkbox" id="rv-liked" /> ❤️ Curtiu</label>
+        </div>
+        <input type="hidden" id="rv-tid" />
+      </div>
+      <div class="mfoot">
+        <button class="btn btn-out btn-sm" onclick="closeModal('m-review')">Cancelar</button>
+        <button class="btn btn-pri btn-sm" onclick="doReview()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nova lista -->
+  <div class="overlay" id="m-newlist">
+    <div class="modal">
+      <div class="mhead">
+        <h2 class="mtitle">Nova Lista</h2>
+        <button class="mclose" onclick="closeModal('m-newlist')">✕</button>
+      </div>
+      <div class="mbody">
+        <div class="fg">
+          <label class="flabel">Nome *</label>
+          <input class="finput" id="nl-name" placeholder="Ex: Para Assistir Este Mês" />
+        </div>
+        <div class="fg">
+          <label class="flabel">Descrição</label>
+          <textarea class="ftarea" id="nl-desc" placeholder="Opcional…" style="min-height:65px"></textarea>
+        </div>
+      </div>
+      <div class="mfoot">
+        <button class="btn btn-out btn-sm" onclick="closeModal('m-newlist')">Cancelar</button>
+        <button class="btn btn-pri btn-sm" onclick="doCreateList()">Criar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adicionar à lista -->
+  <div class="overlay" id="m-atl">
+    <div class="modal">
+      <div class="mhead">
+        <h2 class="mtitle">Adicionar à Lista</h2>
+        <button class="mclose" onclick="closeModal('m-atl')">✕</button>
+      </div>
+      <div class="mbody">
+        <p style="color:var(--txt1);font-size:13.5px;margin-bottom:1rem">Escolha em qual lista adicionar:</p>
+        <div id="atl-opts"></div>
+        <input type="hidden" id="atl-tid" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toasts" id="toasts"></div>
+
+  <!-- JavaScript externo -->
+  <script src="../js/app.js"></script>
+  <script src="server.js"></script>
+
+</body>
+</html>

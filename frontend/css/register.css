@@ -1,0 +1,175 @@
+/* RESET */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* BODY */
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(
+        135deg,
+        #050816,
+        #0b1120,
+        #111827
+    );
+    padding:20px;
+}
+
+/* CARD */
+
+.register-container{
+    width:100%;
+    max-width:550px;
+    background:#0f172a;
+    border:1px solid rgba(96,165,250,.2);
+    border-radius:20px;
+    padding:35px;
+    box-shadow:
+        0 0 30px rgba(59,130,246,.15);
+}
+
+/* TÍTULO */
+
+.register-container h1{
+    color:white;
+    text-align:center;
+    margin-bottom:10px;
+    font-size:2rem;
+}
+
+.register-container p{
+    text-align:center;
+    color:#94a3b8;
+    margin-bottom:30px;
+}
+
+/* FORM */
+
+#registerForm{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+/* INPUTS */
+
+#registerForm input,
+#registerForm select{
+    width:100%;
+    padding:14px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    background:#1e293b;
+    color:white;
+    font-size:15px;
+    transition:.3s;
+}
+
+#registerForm input:focus,
+#registerForm select:focus{
+    border:1px solid #60a5fa;
+    box-shadow:0 0 12px rgba(96,165,250,.4);
+}
+
+/* PLACEHOLDER */
+
+#registerForm input::placeholder{
+    color:#94a3b8;
+}
+
+/* SELECT */
+
+#registerForm select{
+    cursor:pointer;
+}
+
+/* CHECKBOX */
+
+.checkbox-container{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+.checkbox-container input{
+    width:18px;
+    height:18px;
+    accent-color:#60a5fa;
+}
+
+/* BOTÃO */
+
+#registerForm button{
+    margin-top:10px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(
+        135deg,
+        #3b82f6,
+        #60a5fa
+    );
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#registerForm button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(59,130,246,.4);
+}
+
+/* ERRO */
+
+#error{
+    min-height:20px;
+    color:#fda4af;
+    text-align:center;
+    font-size:14px;
+    font-weight:500;
+}
+
+/* LINK LOGIN */
+
+.login-link{
+    text-align:center;
+    margin-top:20px;
+    color:#94a3b8;
+}
+
+.login-link a{
+    color:#60a5fa;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.login-link a:hover{
+    text-decoration:underline;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:600px){
+
+    .register-container{
+        padding:25px;
+    }
+
+    .register-container h1{
+        font-size:1.7rem;
+    }
+
+}
