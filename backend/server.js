@@ -7,6 +7,11 @@ const jwt = require("jsonwebtoken");
 const app = express();
 
 app.use(cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 app.use(express.json());
 
 const PORT = process.env.PORT;
@@ -121,12 +126,43 @@ app.get("/profile", verifyToken, (req, res) => {
   });
 
 });
+app.get("/titles", (req, res) => {
+  const filmes = [
+    { 
+      id: 't1', 
+      title: 'Oppenheimer', 
+      type: 'movie', 
+      year: 2023, 
+      dir: 'Christopher Nolan',
+      genres: ['Drama', 'Biografia']
+    },
+    { 
+      id: 't2', 
+      title: 'Duna: Parte 2', 
+      type: 'movie', 
+      year: 2024, 
+      dir: 'Denis Villeneuve',
+      genres: ['Ficção Científica', 'Ação']
+    },
+    { 
+      id: 't5', 
+      title: 'Succession', 
+      type: 'series', 
+      year: 2018, 
+      dir: 'Jesse Armstrong',
+      genres: ['Drama']
+    }
+  ];
+  
+  res.json(filmes);
+});
 
 app.listen(PORT, () => {
 
   console.log(`Servidor rodando na porta ${PORT}`);
 
 });
+
 
 app.post("/register", (req, res) => {
 

@@ -44,7 +44,7 @@ form.addEventListener("submit", async (e) => {
   try {
 
     const response = await fetch(
-      "http://localhost:5000/register",
+      "http://localhost:1958/register",
       {
         method: "POST",
         headers: {

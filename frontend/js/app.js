@@ -85,14 +85,50 @@
     }
 
     function doLogin() {
-      const email = document.getElementById('l-email').value.trim();
-      const pass = document.getElementById('l-pass').value;
+
+      //pega os dados da tela do user
+      const email = document.getElementById(`l-email`).value.trim();
+      const pass = document.getElementById(`l-pass`).value;
       const err = document.getElementById('l-err');
-      const u = DB.users.find(u => u.email === email && u.pass === pass);
-      if (!u) { err.textContent = 'Email ou senha incorretos.'; err.style.display = 'block'; return; }
-      err.style.display = 'none';
+
+      //envia os dados para o servidor
+      fetch(`https://localhost:1958/login`, {
+        method: `POST`,
+        header: {'Content-Type': 'application.json'},
+        body: JSON.stringify({email: email, pass: pass})
+      })
+
+      //tratamento da resposta do servidor - assíncrona
+      .then(response => response.json())
+      //caso dê erro no login
+      .then(data => {if (data.erro) { 
+        err.textContent = data.erro;
+        err.style.display = 'block';}
+      //caso o login seja bem-sucedido
+        else {err.style.display = 'none';}
+      //salva a sessão do usuário
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      //criação do objeto do user local
+      const u = {
+        id: data.user.id,
+        username: data.user.username,
+        email: data.user.email,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        bio: '',
+        created: new Date().toISOString()
+      };
       loginSuccess(u);
-    }
+    }) 
+    .catch(error => {
+      console.error('Erro:', error);
+      err.textContent = 'Erro ao conectar com servidor';
+      err.style.display = 'block';
+    })
+  }
+
+    
 
     function doRegister() {
       const username = document.getElementById('r-user').value.trim();
@@ -167,35 +203,40 @@
 
     // HOME 
     function renderHome() {
-      const all = DB.titles;
-      document.getElementById('home-all').innerHTML = all.slice(0, 6).map(cardHTML).join('');
-      document.getElementById('home-movies').innerHTML = all.filter(t => t.type === 'movie').slice(0, 5).map(cardHTML).join('');
-      document.getElementById('home-series').innerHTML = all.filter(t => t.type === 'series').slice(0, 5).map(cardHTML).join('');
-      // Recs
-      if (currentUser) {
-        const myRevs = DB.reviews.filter(r => r.uid === currentUser.id && r.rating >= 4);
-        if (myRevs.length > 0) {
-          const likedIds = new Set(myRevs.map(r => r.tid));
-          const recs = all.filter(t => !likedIds.has(t.id)).slice(0, 6);
-          document.getElementById('rec-sec').style.display = '';
-          document.getElementById('rec-grid').innerHTML = recs.map(cardHTML).join('');
-        }
-      }
+      fetch(`http://localhost:1958/titles`)
+      .then(response => responde.json())
+      .then(titles => {
+        //mostra os 6 primeiros itens de títulos, o cardHTML passa tudo para o estilo HTML de nome e mostra na página
+        //o join('') junta tudo isso em uma grande string, depois interpretada pelo innerHTML para a user interface
+        document.getElementById('home-all'.innerHTML = titles.slice(0, 6).map(cardHTML).join('')); //se for qualquer
+        document.getElementById('home-movies').innerHTML = titles.filter(t => t.type === 'movie').slice(0, 5).map(cardHTML).join(''); //se for filme
+        document.getElementById('home-series').innerHTML = titles.filter(t => t.type === 'series').slice(0, 5).map(cardHTML).join(''); //se for série
+      })
     }
 
     // CATALOGO
     function renderCatalog(search) {
       const ab = document.getElementById('addTitleBtn');
       if (ab) ab.style.display = currentUser ? 'flex' : 'none';
-      let titles = [...DB.titles];
-      if (catFilter.type) titles = titles.filter(t => t.type === catFilter.type);
-      const genre = document.getElementById('genreF').value;
-      if (genre) titles = titles.filter(t => t.genres.includes(genre));
-      if (search) { const q = search.toLowerCase(); titles = titles.filter(t => t.title.toLowerCase().includes(q) || t.dir.toLowerCase().includes(q) || (t.cast || []).some(a => a.toLowerCase().includes(q)) || (t.genres || []).some(g => g.toLowerCase().includes(q))); }
-      const grid = document.getElementById('cat-grid');
-      const empty = document.getElementById('cat-empty');
-      if (!titles.length) { grid.innerHTML = ''; empty.style.display = 'block'; }
-      else { empty.style.display = 'none'; grid.innerHTML = titles.map(cardHTML).join(''); }
+      fetch('http://localhost:1958/titles') //busca filmes do backend
+      .then(response => responde.json())
+      .then(filmes => {
+        let titles = filmes;
+        //filtra por tipo de filme nos seletores (filme/série, gênero e etc.)
+        if (catFilter.type) {
+          titles = titles.filter(t => t.type === catFilter.type)
+        }
+        const grid = document.getElementById('cat-grid');
+        const empty = document.getElementById('cat-empty');
+
+        if (titles.length === 0) { //se não tem título, a grade fica vazia e bloqueia
+          grid.innerHTML = '';
+          empty.style.display = 'block' 
+        } else { //se tem título, a grade mostra os filmes/séries (busca todos pra mostrar pelo map())
+          empty.style.display = 'none';
+          grid.innerHTML = titles.map(cardHTML).join('')
+        }
+      })
     }
 
     //SEARCH 
