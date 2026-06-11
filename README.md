@@ -1,4 +1,3 @@
-[LEIAME.md](https://github.com/user-attachments/files/28853040/LEIAME.md)
 **Instituto Federal de Alagoas \- Campus Maceió**  
 **Disciplina:** Programação Orientada a Objetos (POO)  
 **Professor:** Ricardo Rubens  
