@@ -1,71 +1,194 @@
-const UsuarioService = require('../services/UsuarioService');
+const UsuarioService = require("../services/usuarioService");
 
 class UsuarioController {
     constructor() {
-        this.usuarioService = new UsuarioService();
+        this.usuarioService = UsuarioService;
     }
 
     async cadastrar(req, res) {
         try {
-            const {nome, email, senha} = req.body;
+            const { nome, username, email, senha } = req.body;
 
-            const usuario = await this.usuarioService.cadastrarUsuario(nome, email, senha);
+            const usuario = await this.usuarioService.cadastrar(
+                nome,
+                username,
+                email,
+                senha,
+            );
 
-            res.json({mensagem: "Usuário cadastrado com sucesso!", usuario})
-
-        } catch(err) {
-            res.send(err.message);
+            res.status(201).json({
+                mensagem: "Usuário cadastrado com sucesso!",
+                usuario: {
+                    nome: usuario.nome,
+                    username: usuario.username,
+                    email: usuario.email,
+                },
+            });
+        } catch (err) {
+            res.status(400).json({
+                erro: err.message,
+            });
         }
     }
 
-    async buscarPorId(req, res) {
+    async login(req, res) {
         try {
-            const {id} = req.params;
+            const { email, senha } = req.body;
 
-            const usuario = await this.usuarioService.buscarUsuarioPorId(id);
+            const usuario = await this.usuarioService.login(email, senha);
 
-            res.send(usuario);
-
-        } catch(err) {
-            res.send(err.message);
+            res.status(200).json({
+                mensagem: "Login realizado com sucesso",
+            });
+        } catch (err) {
+            res.status(401).json({
+                erro: err.message,
+            });
         }
     }
 
-    async listar(req, res) {
+    async atualizar(req, res) {
         try {
-            const usuarios = await this.usuarioService.listarUsuarios();
-            res.send(usuarios);
+            const { id } = req.params;
+            const { nome, username } = req.body;
 
-        } catch(err) {
-            res.send(err.message);
+            const usuario = await this.usuarioService.atualizar(
+                id,
+                nome,
+                username,
+            );
+
+            res.status(200).json({
+                mensagem: "Atualização realizada com sucesso",
+                usuario: {
+                    nome: usuario.nome,
+                    username: usuario.username,
+                },
+            });
+        } catch (err) {
+            res.status(409).json({
+                erro: err.message,
+            });
         }
     }
 
     async alterarSenha(req, res) {
         try {
-            const {id} = req.params;
-            const {senhaAtual, novaSenha} = req.body;
+            const { id } = req.params;
+            const { senhaAtual, novaSenha } = req.body;
             await this.usuarioService.alterarSenha(id, senhaAtual, novaSenha);
 
-            res.send("Senha alterada com sucesso!");
-
-        } catch(err) {
-            res.send(err.message);
+            res.status(200).json({
+                mensagem: "Senha alterada com sucesso",
+            });
+        } catch (err) {
+            res.status(409).json({
+                erro: err.message,
+            });
         }
     }
 
     async remover(req, res) {
         try {
-            const {id} = req.params;
+            const { id } = req.params;
 
-            await this.usuarioService.removerUsuario(id);
+            const usuario = await this.usuarioService.remover(id);
 
-            res.send("Usuário removido com sucesso!");
-
-        } catch(err) {
-            res.send(err.message);
+            res.status(200).json({
+                mensagem: "Usuário removido",
+            });
+        } catch (err) {
+            res.status(404).json({
+                erro: err.message,
+            });
         }
     }
+
+    async listar(req, res) {
+        try {
+            const usuarios = await this.usuarioService.listar();
+
+            res.status(200).json({
+                mensagem: "Lista de usuários",
+                usuarios,
+            });
+        } catch (err) {
+            res.status(404).json({
+                erro: err.message,
+            });
+        }
+    }
+
+    async buscarPorId(req, res) {
+        try {
+            const { id } = req.params;
+
+            const usuario = await this.usuarioService.buscarPorId(id);
+
+            res.status(200).json({
+                mensagem: "Usuário encontrado",
+                usuario,
+            });
+        } catch (err) {
+            res.status(404).json({
+                erro: err.message,
+            });
+        }
+    }
+
+    // async buscarPorNome(req, res) {
+    //      try {
+    //         const { nome } = req.body;
+
+    //         const usuario = await this.usuarioService.buscarPorNome(nome);
+
+    //         res.json({
+    //             mensagem: "",
+    //             usuario
+    //         });
+
+    //     } catch (err) {
+    //         res.json({
+    //             erro: err.message
+    //         })
+    //     }
+    // }
+
+    async buscarPorUsername(req, res) {
+        try {
+            const { username } = req.body;
+
+            const usuario =
+                await this.usuarioService.buscarPorUsername(username);
+
+            res.json({
+                mensagem: "",
+                usuario,
+            });
+        } catch (err) {
+            res.json({
+                erro: err.message,
+            });
+        }
+    }
+
+    // async buscarPorEmail(req, res) {
+    //      try {
+    //         const { email } = req.body;
+
+    //         const usuario = await this.usuarioService.buscarPorEmail(email);
+
+    //         res.json({
+    //             mensagem: "",
+    //             usuario
+    //         });
+
+    //     } catch (err) {
+    //         res.json({
+    //             erro: err.message
+    //         })
+    //     }
+    // }
 }
 
-module.exports = UsuarioController;
+module.exports = new UsuarioController();

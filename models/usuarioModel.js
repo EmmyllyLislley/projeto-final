@@ -1,14 +1,16 @@
-const validator = require('validator');
+const validator = require("validator");
 
-class Usuario {
-    #id
-    #nome
-    #email
-    #senha
+class UsuarioModel {
+    #id;
+    #nome;
+    #username;
+    #email;
+    #senha;
 
-    constructor(id, nome, email, senha) {
+    constructor(id, nome, username, email, senha) {
         this.#id = id;
         this.#nome = nome;
+        this.#username = username;
         this.#email = email;
         this.#senha = senha;
     }
@@ -21,35 +23,57 @@ class Usuario {
         return this.#nome;
     }
 
+    get username() {
+        return this.#username;
+    }
+
     get email() {
         return this.#email;
     }
 
-    set nome(novoNome) {
-        if(!novoNome || novoNome.trim() === "") {
-            throw new Error("Insira um nome")
-        }
-        this.#nome = novoNome;
+    get senha() {
+        return this.#senha;
     }
 
-    set email(novoEmail) {
-        if (!validator.isEmail(novoEmail)) {
+    set nome(nome) {
+        if (!nome || nome.trim() === "") {
+            throw new Error("Insira um nome");
+        }
+        this.#nome = nome;
+    }
+
+    set username(username) {
+        if (!username || username.trim() === "") {
+            throw new Error("Insira um username");
+        }
+        this.#username = username;
+    }
+
+    set email(email) {
+        if (!email || !validator.isEmail(email)) {
             throw new Error("Email inválido!");
         }
-        this.#email = novoEmail;
+        this.#email = email;
     }
 
-    set senha(novaSenha) {
-        if (!novaSenha || novaSenha.length < 8) {
+    set senha(senha) {
+        if (!senha || senha.length < 6) {
             throw new Error("Senha inválida");
         }
-        this.#senha = novaSenha;
+        this.#senha = senha;
     }
 
     alterarSenha(senhaAtual, novaSenha) {
-        if(senhaAtual !== this.#senha) {
+        if (senhaAtual !== this.#senha) {
             throw new Error("Senha incorreta");
         }
+
+        if (!novaSenha || novaSenha.length < 6) {
+            throw new Error("A nova senha deve nom mínimo 6 caracteres");
+        }
+
         this.#senha = novaSenha;
     }
 }
+
+module.exports = UsuarioModel;
