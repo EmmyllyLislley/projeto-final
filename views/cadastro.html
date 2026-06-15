@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Catálogo</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1e293b;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #22c55e;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .link a {
+            text-decoration: none;
+            color: #2563eb;
+        }
+
+        #mensagem {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Cadastrar Usuário</h1>
+
+        <input
+            type="text"
+            id="nome"
+            placeholder="Nome"
+        >
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Username"
+        >
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Email"
+        >
+
+        <input
+            type="password"
+            id="senha"
+            placeholder="Senha"
+        >
+
+        <button onclick="cadastrar()">
+            Cadastrar
+        </button>
+
+        <div class="link">
+            <a href="login.html">
+                Já possui conta? Fazer login
+            </a>
+        </div>
+
+        <p id="mensagem"></p>
+    </div>
+
+    <script>
+        async function cadastrar() {
+
+            const nome =
+                document.getElementById("nome").value;
+
+            const username =
+                document.getElementById("username").value;
+
+            const email =
+                document.getElementById("email").value;
+
+            const senha =
+                document.getElementById("senha").value;
+
+            try {
+
+                const resposta = await fetch(
+                    "http://localhost:3000/usuarios",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            nome,
+                            username,
+                            email,
+                            senha
+                        })
+                    }
+                );
+
+                const dados = await resposta.json();
+
+                const mensagem =
+                    document.getElementById("mensagem");
+
+                if (resposta.ok) {
+
+                    mensagem.innerText =
+                        "Usuário cadastrado com sucesso!";
+
+                    document.getElementById("nome").value = "";
+                    document.getElementById("username").value = "";
+                    document.getElementById("email").value = "";
+                    document.getElementById("senha").value = "";
+
+                } else {
+
+                    mensagem.innerText =
+                        dados.erro || "Erro ao cadastrar";
+                }
+
+            } catch (erro) {
+
+                document.getElementById("mensagem").innerText =
+                    "Erro ao conectar com o servidor";
+
+                console.error(erro);
+            }
+        }
+    </script>
+
+</body>
+</html>

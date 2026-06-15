@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Catálogo</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1e293b;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #mensagem {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Login</h1>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Digite seu email"
+        >
+
+        <input
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+        >
+
+        <button onclick="fazerLogin()">
+            Entrar
+        </button>
+
+        <p id="mensagem"></p>
+    </div>
+
+    <script>
+        async function fazerLogin() {
+
+            const email =
+                document.getElementById("email").value;
+
+            const senha =
+                document.getElementById("senha").value;
+
+            try {
+
+                const resposta = await fetch(
+                    "http://localhost:3000/usuarios/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            email,
+                            senha
+                        })
+                    }
+                );
+
+                const dados = await resposta.json();
+
+                const mensagem =
+                    document.getElementById("mensagem");
+
+                if (resposta.ok) {
+
+                    mensagem.innerText =
+                        "Login realizado com sucesso!";
+
+                    console.log(dados);
+
+                } else {
+
+                    mensagem.innerText =
+                        dados.erro || "Erro ao fazer login";
+                }
+
+            } catch (erro) {
+
+                document.getElementById("mensagem")
+                    .innerText =
+                    "Erro ao conectar com o servidor";
+
+                console.error(erro);
+            }
+        }
+    </script>
+
+</body>
+</html>
