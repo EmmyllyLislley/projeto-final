@@ -1,4 +1,4 @@
-class Avaliacao {
+class AvaliacaoModel {
     #id;
     #usuario;
     #nota;
@@ -35,18 +35,18 @@ class Avaliacao {
     }
 
     set nota(nota) {
-        if (typeof nota !== 'number' || nota < 0 || nota > 5) {
-            throw new Error("A nota deve estar entre 0 e 10.");
+        if (typeof nota !== "number" || nota < 0 || nota > 5) {
+            throw new Error("A nota deve estar entre 0 e 5.");
         }
         this.#nota = nota;
     }
 
-    set comentario(comentario) {
-        if (!comentario || comentario.trim() === "") {
+    set critica(critica) {
+        if (!critica || critica.trim() === "") {
             throw new Error("Comentário obrigatório.");
         }
-        this.#comentario = comentario;
+        this.#critica = critica;
     }
 }
 
-module.exports = Avaliacao;
+module.exports = AvaliacaoModel;

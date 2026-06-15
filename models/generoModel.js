@@ -1,4 +1,4 @@
-class Genero {
+class GeneroModel {
     #id;
     #nome;
 
@@ -23,4 +23,4 @@ class Genero {
     }
 }
 
-module.exports = Genero;
+module.exports = GeneroModel;

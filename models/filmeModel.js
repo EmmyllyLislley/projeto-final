@@ -1,9 +1,16 @@
-const Titulo = require('./Titulo');
+const TituloModel = require("./tituloModel");
 
-class Filme extends Titulo {
+class FilmeModel extends TituloModel {
     #duracao;
 
-    constructor(id, nome, dataLancamento, classificacaoIndicativa, diretor, duracao) {
+    constructor(
+        id,
+        nome,
+        dataLancamento,
+        classificacaoIndicativa,
+        diretor,
+        duracao,
+    ) {
         super(id, nome, dataLancamento, classificacaoIndicativa, diretor);
 
         this.#duracao = duracao;
@@ -21,4 +28,4 @@ class Filme extends Titulo {
     }
 }
 
-module.exports = Filme;
+module.exports = FilmeModel;

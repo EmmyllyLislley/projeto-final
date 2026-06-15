@@ -1,22 +1,30 @@
-const Titulo = require('./Titulo');
+const TituloModel = require("./TituloModel");
 
-class Serie extends Titulo {
+class SerieModel extends TituloModel {
     #temporadas;
-    #episodios;
+    #totalEpisodios;
 
-    constructor(id, nome, dataLancamento, classificacaoIndicativa, diretor, temporadas, episodios) {
+    constructor(
+        id,
+        nome,
+        dataLancamento,
+        classificacaoIndicativa,
+        diretor,
+        temporadas,
+        totalEpisodios,
+    ) {
         super(id, nome, dataLancamento, classificacaoIndicativa, diretor);
 
         this.#temporadas = temporadas;
-        this.#episodios = episodios;
+        this.#totalEpisodios = totalEpisodios;
     }
 
     get temporadas() {
         return this.#temporadas;
     }
 
-    get episodios() {
-        return this.#episodios;
+    get totalEpisodios() {
+        return this.#totalEpisodios;
     }
 
     set temporadas(qtde) {
@@ -26,12 +34,12 @@ class Serie extends Titulo {
         this.#temporadas = qtde;
     }
 
-    set episodios(qtde) {
+    set totalEpisodios(qtde) {
         if (qtde < 1) {
             throw new Error("Episódios inválidos");
         }
-        this.#episodios = qtde;
+        this.#totalEpisodios = qtde;
     }
 }
 
-module.exports = Serie;
+module.exports = SerieModel;

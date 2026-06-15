@@ -28,19 +28,19 @@ CREATE TABLE IF NOT EXISTS titulos (
 
 
 CREATE TABLE IF NOT EXISTS filmes (
-    id INT PRIMARY KEY,
+    id_filme INT PRIMARY KEY,
     duracao INT NOT NULL,
 
-    FOREIGN KEY (id) REFERENCES titulos(id)
+    FOREIGN KEY (id_filme) REFERENCES titulos(id)
 );
 
 
 CREATE TABLE IF NOT EXISTS series (
-    id INT PRIMARY KEY,
+    id_serie INT PRIMARY KEY,
     temporadas INT,
     total_episodios INT,
 
-    FOREIGN KEY (id) REFERENCES titulos(id)
+    FOREIGN KEY (id_serie) REFERENCES titulos(id)
 );
 
 
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS generos (
 );
 
 
-CREATE TABLE IF NOT EXISTS titulo_genero (
+CREATE TABLE IF NOT EXISTS titulos_generos (
     id_titulo INT,
     id_genero INT,
 
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS atores (
 );
 
 
-CREATE TABLE IF NOT EXISTS titulo_ator (
+CREATE TABLE IF NOT EXISTS titulos_atores (
     id_titulo INT,
     id_ator INT,
 
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS listas (
 );
 
 
-CREATE TABLE IF NOT EXISTS lista_titulo (
+CREATE TABLE IF NOT EXISTS listas_titulos (
     id_lista INT,
     id_titulo INT,
 

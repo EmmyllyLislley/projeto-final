@@ -1,4 +1,4 @@
-class Ator {
+class AtorModel {
     #id;
     #nome;
     #dataNascimento;
@@ -31,23 +31,22 @@ class Ator {
         if (!novoNome || novoNome.trim() === "") {
             throw new Error("Nome do ator inválido.");
         }
-        this.#nome = -novoNome;
+        this.#nome = novoNome;
     }
 
-    set dataNascimento(novaDataNascimento) {
-        if (!novaDataNascimento) {
+    set dataNascimento(dataNascimento) {
+        if (!dataNascimento) {
             throw new Error("Data de nascimento obrigatória.");
         }
-        this.#dataNascimento = novaDataNascimento;
+        this.#dataNascimento = dataNascimento;
     }
 
-    set nacionalidade(novaNacionalidade) {
-        if (!novaNacionalidade || novaNacionalidade.trim() === "") {
+    set nacionalidade(nacionalidade) {
+        if (!nacionalidade || nacionalidade.trim() === "") {
             throw new Error("Nacionalidade inválida.");
         }
-        this.#nacionalidade = novaNacionalidade;
+        this.#nacionalidade = nacionalidade;
     }
-
 }
 
-module.exports = Ator;
+module.exports = AtorModel;

@@ -1,12 +1,26 @@
 const UsuarioModel = require("../models/usuarioModel");
 const UsuarioDAO = require("../repository/usuarioDAO");
 
+const validator = require("validator");
+
 class UsuarioService {
     constructor() {
         this.usuarioDAO = UsuarioDAO;
     }
 
     async cadastrar(nome, username, email, senha) {
+        if (!nome || !username || !email || !senha) {
+            throw new Error("Todos os campos são obrigatórios");
+        }
+
+        if (!email || !validator.isEmail(email)) {
+            throw new Error("Email inválido!");
+        }
+
+        if (senha.length < 6) {
+            throw new Error("Senha muito curta");
+        }
+
         const emailCadastrado = await this.usuarioDAO.buscarPorEmail(email);
         const usernameCadastrado =
             await this.usuarioDAO.buscarPorUsername(username);

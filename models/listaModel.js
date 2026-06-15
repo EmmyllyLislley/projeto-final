@@ -1,10 +1,11 @@
-class Lista {
-    #id 
-    #nome
-    #usuario
-    #titulos
+class ListaModel {
+    #id;
+    #nome;
+    #usuario;
+    #titulos;
 
-    constructor(nome, usuario) {
+    constructor(id, nome, usuario) {
+        this.#id = id;
         this.#nome = nome;
         this.#usuario = usuario;
         this.#titulos = [];
@@ -26,9 +27,13 @@ class Lista {
         return this.#titulos;
     }
 
-    set nome(novoNome) {
-        this.#nome = novoNome;
+    set nome(nome) {
+        if (!nome || nome.trim() === "") {
+            throw new Error("Nome da lista inválido.");
+        }
+
+        this.#nome = nome;
     }
 }
 
-module.exports = Lista;
+module.exports = ListaModel;

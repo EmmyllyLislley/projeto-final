@@ -1,4 +1,4 @@
-class Titulo {
+class TituloModel {
     #id;
     #nome;
     #dataLancamento;
@@ -8,12 +8,12 @@ class Titulo {
     #atores;
     #avaliacoes;
 
-    constructor(id, nome, dataLancamento,  classificacaoIndicativa) {
+    constructor(id, nome, dataLancamento, classificacaoIndicativa, diretor = null) {
         this.#id = id;
         this.#nome = nome;
         this.#dataLancamento = dataLancamento;
         this.#classificacaoIndicativa = classificacaoIndicativa;
-        this.#diretor = null;
+        this.#diretor = diretor;
         this.#generos = [];
         this.#atores = [];
         this.#avaliacoes = [];
@@ -51,25 +51,22 @@ class Titulo {
         return this.#avaliacoes;
     }
 
-    set nome(novoNome) {
-        if(!novoNome || novoNome.trim() === "") {
-            throw new Error("Insira um nome.")
+    set nome(nome) {
+        if (!nome || nome.trim() === "") {
+            throw new Error("Insira um nome.");
         }
-        this.#nome = novoNome;
+        this.#nome = nome;
     }
 
     set classificacaoIndicativa(classificacaoIndicativa) {
-        if(!(livre || 10 || 12 || 14 || 16 || 18)) {
+        const classificacoesValidas = ["livre", 10, 12, 14, 16, 18];
+
+        if (!classificacoesValidas.includes(classificacaoIndicativa)) {
             throw new Error("Insira uma classificação válida.");
         }
-        this.#classificacaoIndicativa = classificacaoIndicativa
-    }
 
-    set generos(genero) {
-        if(!genero) {
-            throw new Error("Insira um gênero.")
-        }
+        this.#classificacaoIndicativa = classificacaoIndicativa;
     }
 }
 
-module.exports = Titulo
+module.exports = TituloModel;

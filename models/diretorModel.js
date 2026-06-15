@@ -1,4 +1,4 @@
-class Diretor {
+class DiretorModel {
     #id;
     #nome;
 
@@ -15,12 +15,12 @@ class Diretor {
         return this.#nome;
     }
 
-    set nome(novoNome) {
-        if (!novoNome || novoNome.trim() === "") {
+    set nome(nome) {
+        if (!nome || nome.trim() === "") {
             throw new Error("Nome do diretor inválido.");
         }
-        this.#nome = novoNome;
+        this.#nome = nome;
     }
 }
 
-module.exports = Diretor;
+module.exports = DiretorModel;

@@ -1,4 +1,4 @@
-const validator = require("validator");
+// const validator = require("validator");
 
 class UsuarioModel {
     #id;
@@ -35,26 +35,26 @@ class UsuarioModel {
         return this.#senha;
     }
 
-    set nome(nome) {
-        if (!nome || nome.trim() === "") {
-            throw new Error("Insira um nome");
-        }
-        this.#nome = nome;
-    }
+    // set nome(nome) {
+    //     if (!nome || nome.trim() === "") {
+    //         throw new Error("Insira um nome");
+    //     }
+    //     this.#nome = nome;
+    // }
 
-    set username(username) {
-        if (!username || username.trim() === "") {
-            throw new Error("Insira um username");
-        }
-        this.#username = username;
-    }
+    // set username(username) {
+    //     if (!username || username.trim() === "") {
+    //         throw new Error("Insira um username");
+    //     }
+    //     this.#username = username;
+    // }
 
-    set email(email) {
-        if (!email || !validator.isEmail(email)) {
-            throw new Error("Email inválido!");
-        }
-        this.#email = email;
-    }
+    // set email(email) {
+    //     if (!email || !validator.isEmail(email)) {
+    //         throw new Error("Email inválido!");
+    //     }
+    //     this.#email = email;
+    // }
 
     set senha(senha) {
         if (!senha || senha.length < 6) {
