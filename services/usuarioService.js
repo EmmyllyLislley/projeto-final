@@ -104,7 +104,6 @@ class UsuarioService {
         const usernameCadastrado =
             await this.usuarioDAO.buscarPorUsername(username);
 
-        // evita conflito com o próprio usuário
         if (usernameCadastrado && usernameCadastrado.id !== id) {
             throw new Error("Já existe um usuário com esse username");
         }
