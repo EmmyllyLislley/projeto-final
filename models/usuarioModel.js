@@ -35,34 +35,6 @@ class UsuarioModel {
         return this.#senha;
     }
 
-    // set nome(nome) {
-    //     if (!nome || nome.trim() === "") {
-    //         throw new Error("Insira um nome");
-    //     }
-    //     this.#nome = nome;
-    // }
-
-    // set username(username) {
-    //     if (!username || username.trim() === "") {
-    //         throw new Error("Insira um username");
-    //     }
-    //     this.#username = username;
-    // }
-
-    // set email(email) {
-    //     if (!email || !validator.isEmail(email)) {
-    //         throw new Error("Email inválido!");
-    //     }
-    //     this.#email = email;
-    // }
-
-    set senha(senha) {
-        if (!senha || senha.length < 6) {
-            throw new Error("Senha inválida");
-        }
-        this.#senha = senha;
-    }
-
     alterarSenha(senhaAtual, novaSenha) {
         if (senhaAtual !== this.#senha) {
             throw new Error("Senha incorreta");

@@ -8,7 +8,7 @@ class TituloModel {
     #atores;
     #avaliacoes;
 
-    constructor(id, nome, dataLancamento, classificacaoIndicativa, diretor = null) {
+    constructor(id, nome, dataLancamento = null, classificacaoIndicativa = null, diretor = null) {
         this.#id = id;
         this.#nome = nome;
         this.#dataLancamento = dataLancamento;
@@ -49,23 +49,6 @@ class TituloModel {
 
     get avaliacoes() {
         return this.#avaliacoes;
-    }
-
-    set nome(nome) {
-        if (!nome || nome.trim() === "") {
-            throw new Error("Insira um nome.");
-        }
-        this.#nome = nome;
-    }
-
-    set classificacaoIndicativa(classificacaoIndicativa) {
-        const classificacoesValidas = ["livre", 10, 12, 14, 16, 18];
-
-        if (!classificacoesValidas.includes(classificacaoIndicativa)) {
-            throw new Error("Insira uma classificação válida.");
-        }
-
-        this.#classificacaoIndicativa = classificacaoIndicativa;
     }
 }
 
