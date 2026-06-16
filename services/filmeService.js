@@ -8,20 +8,12 @@ class FilmeService {
         this.filmeDAO = FilmeDAO;
     }
 
-    async cadastrar(
-        nome,
-        dataLancamento,
-        classificacaoIndicativa,
-        duracao,
-        idDiretor,
-    ) {
-        if (!nome?.trim() || !duracao) {
-            throw new Error("Os campos são obrigatórios");
+    async cadastrar(nome, dataLancamento, classificacaoIndicativa, duracao, idDiretor) {
+        if (!nome?.trim() || !duracao || !idDiretor) {
+            throw new Error("Os campos nome, duração e diretor são obrigatórios");
         }
-        nome = nome.trim();
 
         const data = new Date(dataLancamento);
-
         if (isNaN(data.getTime())) {
             throw new Error("Data de lançamento inválida");
         }
@@ -30,15 +22,15 @@ class FilmeService {
             throw new Error("Duração inválida");
         }
 
+        const classeNormalizada = classificacaoIndicativa === "livre" ? "livre" : Number(classificacaoIndicativa);
         const classificacoesValidas = ["livre", 10, 12, 14, 16, 18];
-
-        if (!classificacoesValidas.includes(classificacaoIndicativa)) {
+        if (!classificacoesValidas.includes(classeNormalizada)) {
             throw new Error("Insira uma classificação válida.");
         }
 
         const filme = new FilmeModel(
             null,
-            nome,
+            nome.trim(),
             dataLancamento,
             classificacaoIndicativa,
             idDiretor,
@@ -46,38 +38,26 @@ class FilmeService {
         );
 
         const idTitulo = await this.tituloDAO.adicionar(filme, idDiretor);
-
         await this.filmeDAO.adicionar(idTitulo, duracao);
 
         return filme;
     }
 
-    async atualizar(
-        id,
-        nome,
-        dataLancamento,
-        classificacaoIndicativa,
-        duracao,
-        idDiretor,
-    ) {
+    async atualizar(id, nome, dataLancamento, classificacaoIndicativa, duracao, idDiretor) {
         if (!id) {
             throw new Error("ID é obrigatório");
         }
 
         const tituloId = await this.tituloDAO.buscarPorId(id);
-
         if (!tituloId) {
             throw new Error("Filme não encontrado");
         }
 
-        if (!nome?.trim() || !duracao) {
+        if (!nome?.trim() || !duracao || !idDiretor) {
             throw new Error("Todos os campos são obrigatórios");
         }
 
-        nome = nome.trim();
-
         const data = new Date(dataLancamento);
-
         if (isNaN(data.getTime())) {
             throw new Error("Data de lançamento inválida");
         }
@@ -86,15 +66,16 @@ class FilmeService {
             throw new Error("Duração inválida");
         }
 
+        const classeNormalizada = classificacaoIndicativa === "livre" ? "livre" : Number(classificacaoIndicativa);
         const classificacoesValidas = ["livre", 10, 12, 14, 16, 18];
-
-        if (!classificacoesValidas.includes(classificacaoIndicativa)) {
+        if (!classificacoesValidas.includes(classeNormalizada)) {
             throw new Error("Insira uma classificação válida.");
         }
 
+        // CORREÇÃO: Passando o 'id' em vez de 'null' no construtor para a atualização funcionar corretamente
         const filme = new FilmeModel(
-            null,
-            nome,
+            id,
+            nome.trim(),
             dataLancamento,
             classificacaoIndicativa,
             idDiretor,
@@ -108,12 +89,9 @@ class FilmeService {
     }
 
     async remover(id) {
-        if (!id) {
-            throw new Error("ID é obrigatório");
-        }
+        if (!id) throw new Error("ID é obrigatório");
 
         const titulo = await this.tituloDAO.buscarPorId(id);
-
         if (!titulo) {
             throw new Error("Filme não encontrado");
         }
@@ -127,12 +105,9 @@ class FilmeService {
     }
 
     async buscarPorId(id) {
-        if (!id) {
-            throw new Error("ID é obrigatório");
-        }
+        if (!id) throw new Error("ID é obrigatório");
 
         const tituloId = await this.tituloDAO.buscarPorId(id);
-
         if (!tituloId) {
             throw new Error("Filme não encontrado");
         }

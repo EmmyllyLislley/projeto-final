@@ -26,14 +26,6 @@ class ListaModel {
     get titulos() {
         return this.#titulos;
     }
-
-    set nome(nome) {
-        if (!nome || nome.trim() === "") {
-            throw new Error("Nome da lista inválido.");
-        }
-
-        this.#nome = nome;
-    }
 }
 
 module.exports = ListaModel;

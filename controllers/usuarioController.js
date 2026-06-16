@@ -98,9 +98,7 @@ class UsuarioController {
                 mensagem: "Usuário removido",
             });
         } catch (err) {
-            res.status(404).json({
-                erro: err.message,
-            });
+            res.status(440).json({ erro: err.message });
         }
     }
 
@@ -113,7 +111,7 @@ class UsuarioController {
                 usuarios,
             });
         } catch (err) {
-            res.status(404).json({
+            res.status(400).json({
                 erro: err.message,
             });
         }
@@ -156,7 +154,7 @@ class UsuarioController {
 
     async buscarPorUsername(req, res) {
         try {
-            const { username } = req.body;
+            const { username } = req.params;
 
             const usuario =
                 await this.usuarioService.buscarPorUsername(username);
@@ -166,9 +164,7 @@ class UsuarioController {
                 usuario,
             });
         } catch (err) {
-            res.json({
-                erro: err.message,
-            });
+            res.status(404).json({ erro: err.message });
         }
     }
 

@@ -61,6 +61,10 @@ class UsuarioDAO {
         });
     }
 
+    setValue(id, novaSenha) {
+        return this.atualizarSenha(id, novaSenha);
+    }
+
     remover(id) {
         const sql = `DELETE FROM usuarios WHERE id = ?`;
 

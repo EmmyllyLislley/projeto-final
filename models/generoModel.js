@@ -14,13 +14,6 @@ class GeneroModel {
     get nome() {
         return this.#nome;
     }
-
-    set nome(nome) {
-        if (!nome || nome.trim() === "") {
-            throw new Error("Nome do gênero inválido.");
-        }
-        this.#nome = nome;
-    }
 }
 
 module.exports = GeneroModel;

@@ -26,27 +26,6 @@ class AtorModel {
     get nacionalidade() {
         return this.#nacionalidade;
     }
-
-    set nome(novoNome) {
-        if (!novoNome || novoNome.trim() === "") {
-            throw new Error("Nome do ator inválido.");
-        }
-        this.#nome = novoNome;
-    }
-
-    set dataNascimento(dataNascimento) {
-        if (!dataNascimento) {
-            throw new Error("Data de nascimento obrigatória.");
-        }
-        this.#dataNascimento = dataNascimento;
-    }
-
-    set nacionalidade(nacionalidade) {
-        if (!nacionalidade || nacionalidade.trim() === "") {
-            throw new Error("Nacionalidade inválida.");
-        }
-        this.#nacionalidade = nacionalidade;
-    }
 }
 
 module.exports = AtorModel;

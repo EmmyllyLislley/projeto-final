@@ -1,4 +1,4 @@
-const TituloModel = require("./TituloModel");
+const TituloModel = require("./tituloModel");
 
 class SerieModel extends TituloModel {
     #temporadas;
@@ -25,20 +25,6 @@ class SerieModel extends TituloModel {
 
     get totalEpisodios() {
         return this.#totalEpisodios;
-    }
-
-    set temporadas(qtde) {
-        if (qtde < 1) {
-            throw new Error("Temporadas inválidas");
-        }
-        this.#temporadas = qtde;
-    }
-
-    set totalEpisodios(qtde) {
-        if (qtde < 1) {
-            throw new Error("Episódios inválidos");
-        }
-        this.#totalEpisodios = qtde;
     }
 }
 

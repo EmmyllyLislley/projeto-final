@@ -26,27 +26,6 @@ class AvaliacaoModel {
     get critica() {
         return this.#critica;
     }
-
-    set usuario(usuario) {
-        if (!usuario) {
-            throw new Error("Usuário obrigatório.");
-        }
-        this.#usuario = usuario;
-    }
-
-    set nota(nota) {
-        if (typeof nota !== "number" || nota < 0 || nota > 5) {
-            throw new Error("A nota deve estar entre 0 e 5.");
-        }
-        this.#nota = nota;
-    }
-
-    set critica(critica) {
-        if (!critica || critica.trim() === "") {
-            throw new Error("Comentário obrigatório.");
-        }
-        this.#critica = critica;
-    }
 }
 
 module.exports = AvaliacaoModel;

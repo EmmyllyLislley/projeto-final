@@ -7,11 +7,11 @@ class DiretorService {
     }
 
     async cadastrar(nome) {
-        const diretor = new DiretorModel(
-            null,
-            nome
-        );
+        if (!nome?.trim()) {
+            throw new Error("O nome do diretor é obrigatório");
+        }
 
+        const diretor = new DiretorModel(null, nome.trim());
         const id = await this.diretorDAO.adicionar(diretor);
 
         return {
@@ -21,26 +21,26 @@ class DiretorService {
     }
 
     async atualizar(id, nome) {
-        const diretorExistente =
-            await this.diretorDAO.buscarPorId(id);
-
+        if (!id) throw new Error("ID é obrigatório");
+        
+        const diretorExistente = await this.diretorDAO.buscarPorId(id);
         if (!diretorExistente) {
             throw new Error("Diretor não encontrado");
         }
 
-        const diretor = new DiretorModel(
-            id,
-            nome
-        );
+        if (!nome?.trim()) {
+            throw new Error("O nome do diretor é obrigatório para atualização");
+        }
 
+        const diretor = new DiretorModel(id, nome.trim());
         await this.diretorDAO.atualizar(id, diretor);
 
         return diretor;
     }
 
     async remover(id) {
-        const diretor =
-            await this.diretorDAO.buscarPorId(id);
+        if (!id) throw new Error("ID é obrigatório");
+        const diretor = await this.diretorDAO.buscarPorId(id);
 
         if (!diretor) {
             throw new Error("Diretor não encontrado");
@@ -54,8 +54,8 @@ class DiretorService {
     }
 
     async buscarPorId(id) {
-        const diretor =
-            await this.diretorDAO.buscarPorId(id);
+        if (!id) throw new Error("ID é obrigatório");
+        const diretor = await this.diretorDAO.buscarPorId(id);
 
         if (!diretor) {
             throw new Error("Diretor não encontrado");
@@ -65,9 +65,11 @@ class DiretorService {
     }
 
     async buscarPorNome(nome) {
-        const diretores =
-            await this.diretorDAO.buscarPorNome(nome);
+        if (!nome?.trim()) {
+            throw new Error("O nome para busca é obrigatório");
+        }
 
+        const diretores = await this.diretorDAO.buscarPorNome(nome.trim());
         if (!diretores || diretores.length === 0) {
             throw new Error("Diretor não encontrado");
         }

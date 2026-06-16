@@ -7,8 +7,11 @@ class ListaService {
     }
 
     async cadastrar(nome, idUsuario) {
-        const lista = new ListaModel(null, nome, idUsuario);
+        if (!nome?.trim() || !idUsuario) {
+            throw new Error("Nome da lista e ID do usuário são obrigatórios");
+        }
 
+        const lista = new ListaModel(null, nome.trim(), idUsuario);
         const id = await this.listaDAO.adicionar(lista);
 
         return {
@@ -19,20 +22,25 @@ class ListaService {
     }
 
     async atualizar(id, nome) {
-        const listaExistente = await this.listaDAO.buscarPorId(id);
+        if (!id) throw new Error("ID da lista é obrigatório");
 
+        const listaExistente = await this.listaDAO.buscarPorId(id);
         if (!listaExistente) {
             throw new Error("Lista não encontrada");
         }
 
-        const lista = new ListaModel(id, nome, listaExistente.id_usuario);
+        if (!nome?.trim()) {
+            throw new Error("O nome da lista é obrigatório para atualização");
+        }
 
+        const lista = new ListaModel(id, nome.trim(), listaExistente.idUsuario);
         await this.listaDAO.atualizar(id, lista);
 
         return lista;
     }
 
     async remover(id) {
+        if (!id) throw new Error("ID é obrigatório");
         const lista = await this.listaDAO.buscarPorId(id);
 
         if (!lista) {
@@ -47,6 +55,7 @@ class ListaService {
     }
 
     async buscarPorId(id) {
+        if (!id) throw new Error("ID é obrigatório");
         const lista = await this.listaDAO.buscarPorId(id);
 
         if (!lista) {
