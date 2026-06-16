@@ -13,29 +13,31 @@ class UsuarioService {
             throw new Error("Todos os campos são obrigatórios");
         }
 
-        const regexSemEspacos = /^[a-zA-Z0-9_]+$/;
+        // CORREÇÃO CRÍTICA: Garante que a senha seja tratada como string e remove espaços
+        // Dentro do método cadastrar(nome, username, email, senha)
 
+        // 1. Forçar a conversão para String e remover espaços acidentais nas pontas
+        const senhaStr = String(senha).trim();
+
+        // 2. Agora a validação de tamanho funciona perfeitamente para qualquer formato de entrada
+        if (senhaStr.length < 6) {
+            throw new Error("A senha deve ter pelo menos 6 caracteres ou dígitos.");
+        }
+
+        const regexSemEspacos = /^[a-zA-Z0-9_]+$/;
         username = username.trim();
 
         if (!regexSemEspacos.test(username)) {
-            throw new Error(
-                "O username não pode conter espaços ou caracteres especiais!",
-            );
+            throw new Error("O username não pode conter espaços ou caracteres especiais!");
         }
 
         email = email.trim().toLowerCase();
-
         if (!validator.isEmail(email)) {
             throw new Error("Email inválido!");
         }
 
-        if (senha.length < 6) {
-            throw new Error("Senha muito curta");
-        }
-
         const emailCadastrado = await this.usuarioDAO.buscarPorEmail(email);
-        const usernameCadastrado =
-            await this.usuarioDAO.buscarPorUsername(username);
+        const usernameCadastrado = await this.usuarioDAO.buscarPorUsername(username);
 
         if (emailCadastrado) {
             throw new Error("Já existe um usuário com esse email.");
@@ -45,8 +47,8 @@ class UsuarioService {
             throw new Error("Já existe um usuário com esse username");
         }
 
-        const usuario = new UsuarioModel(null, nome, username, email, senha);
-
+        // Envia a senha devidamente sanitizada
+        const usuario = new UsuarioModel(null, nome.trim(), username, email, senhaStr);
         await this.usuarioDAO.adicionar(usuario);
 
         return usuario;
@@ -86,7 +88,6 @@ class UsuarioService {
         }
 
         const regexSemEspacos = /^[a-zA-Z0-9_]+$/;
-
         username = username.trim();
 
         if (!regexSemEspacos.test(username)) {
@@ -95,20 +96,26 @@ class UsuarioService {
             );
         }
 
-        const usuarioId = await this.usuarioDAO.buscarPorId(id);
+        const usuarioExistente = await this.usuarioDAO.buscarPorId(id);
 
-        if (!usuarioId) {
+        if (!usuarioExistente) {
             throw new Error("Usuário não encontrado");
         }
 
-        const usernameCadastrado =
-            await this.usuarioDAO.buscarPorUsername(username);
+        const usernameCadastrado = await this.usuarioDAO.buscarPorUsername(username);
 
         if (usernameCadastrado && usernameCadastrado.id !== id) {
             throw new Error("Já existe um usuário com esse username");
         }
 
-        const usuario = new UsuarioModel(null, nome, username);
+        // CORREÇÃO: Passar o ID recebido e manter as propriedades obrigatórias (email, senha) do registo existente
+        const usuario = new UsuarioModel(
+            id, 
+            nome.trim(), 
+            username, 
+            usuarioExistente.email, 
+            usuarioExistente.senha
+        );
 
         return await this.usuarioDAO.atualizar(id, usuario);
     }
@@ -118,17 +125,18 @@ class UsuarioService {
             throw new Error("Todos os campos são obrigatórios");
         }
 
-        if (novaSenha.length < 6) {
-            throw new Error("A nova senha deve ter pelo menos 6 caracteres");
+        // CORREÇÃO CRÍTICA: Garante que a nova senha seja uma string válida de 6 dígitos
+        const novaSenhaStr = String(novaSenha).trim();
+        if (novaSenhaStr.length < 6) {
+            throw new Error("A nova senha deve ter pelo menos 6 caracteres/dígitos.");
         }
 
         const usuarioEncontrado = await this.usuarioDAO.buscarPorId(id);
-
         if (!usuarioEncontrado) {
             throw new Error("Usuário não encontrado");
         }
 
-        if (usuarioEncontrado.senha !== senhaAtual) {
+        if (usuarioEncontrado.senha !== String(senhaAtual)) {
             throw new Error("Senha atual incorreta");
         }
 
@@ -140,9 +148,9 @@ class UsuarioService {
             usuarioEncontrado.senha,
         );
 
-        usuario.alterarSenha(senhaAtual, novaSenha);
+        usuario.alterarSenha(String(senhaAtual), novaSenhaStr);
 
-        return await this.usuarioDAO.atualizarSenha(usuario.id, usuario.senha);
+        return await this.usuarioDAO.setValue(usuario.id, usuario.senha);
     }
 
     async remover(id) {
@@ -178,7 +186,7 @@ class UsuarioService {
             throw new Error("Username é obrigatório");
         }
 
-        const usuario = await this.usuarioDAO.buscarPorUsername(username);
+        const usuario = await this.usuarioDAO.buscarPorUsername(username.trim());
 
         if (!usuario) {
             throw new Error("Usuário não encontrado.");

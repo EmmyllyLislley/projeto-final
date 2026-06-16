@@ -14,13 +14,6 @@ class DiretorModel {
     get nome() {
         return this.#nome;
     }
-
-    set nome(nome) {
-        if (!nome || nome.trim() === "") {
-            throw new Error("Nome do diretor inválido.");
-        }
-        this.#nome = nome;
-    }
 }
 
 module.exports = DiretorModel;

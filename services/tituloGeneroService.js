@@ -10,30 +10,37 @@ class TituloGeneroService {
     }
 
     async adicionarGeneroAoTitulo(idTitulo, idGenero) {
-        const titulo = await this.tituloDAO.buscarPorId(idTitulo);
+        if (!idTitulo || !idGenero) {
+            throw new Error("ID do título e ID do gênero são obrigatórios");
+        }
 
+        const titulo = await this.tituloDAO.buscarPorId(idTitulo);
         if (!titulo) {
             throw new Error("Título não encontrado");
         }
 
         const genero = await this.generoDAO.buscarPorId(idGenero);
-
         if (!genero) {
-            throw new Error("Genero não encontrado");
+            throw new Error("Gênero não encontrado");
         }
 
         await this.tituloGeneroDAO.adicionarGeneroAoTitulo(idTitulo, idGenero);
     }
 
     async removerGeneroDoTitulo(idTitulo, idGenero) {
+        if (!idTitulo || !idGenero) {
+            throw new Error("ID do título e ID do gênero são obrigatórios");
+        }
         await this.tituloGeneroDAO.removerGeneroDoTitulo(idTitulo, idGenero);
     }
 
     async listarGeneroesDoTitulo(idTitulo) {
+        if (!idTitulo) throw new Error("ID do título é obrigatório");
         return await this.tituloGeneroDAO.listarGeneroesDoTitulo(idTitulo);
     }
 
     async listarTitulosDoGenero(idGenero) {
+        if (!idGenero) throw new Error("ID do gênero é obrigatório");
         return await this.tituloGeneroDAO.listarTitulosDoGenero(idGenero);
     }
 }

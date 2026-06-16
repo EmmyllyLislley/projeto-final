@@ -9,38 +9,77 @@ class SerieService {
     }
 
     async cadastrar(nome, dataLancamento, classificacaoIndicativa, temporadas, totalEpisodios, idDiretor) {
+        if (!nome?.trim() || temporadas === undefined || totalEpisodios === undefined || !idDiretor) {
+            throw new Error("Campos obrigatórios ausentes (nome, temporadas, episódios, diretor)");
+        }
+
+        const data = new Date(dataLancamento);
+        if (isNaN(data.getTime())) {
+            throw new Error("Data de lançamento inválida");
+        }
+
+    const classeNormalizada = classificacaoIndicativa === "livre" ? "livre" : Number(classificacaoIndicativa);
+        const classificacoesValidas = ["livre", 10, 12, 14, 16, 18];
+        if (!classificacoesValidas.includes(classeNormalizada)) {
+            throw new Error("Insira uma classificação válida.");
+        }
+
+        if (Number(temporadas) <= 0 || Number(totalEpisodios) <= 0) {
+            throw new Error("O número de temporadas e episódios deve ser maior que zero");
+        }
+
         const serie = new SerieModel(
             null,
-            nome,
+            nome.trim(),
             dataLancamento,
             classificacaoIndicativa,
             idDiretor,
-            temporadas,
-            totalEpisodios,
+            Number(temporadas),
+            Number(totalEpisodios),
         );
 
         const idTitulo = await this.tituloDAO.adicionar(serie, idDiretor);
-
         await this.serieDAO.adicionar(idTitulo, serie);
 
         return serie;
     }
 
     async atualizar(id, nome, dataLancamento, classificacaoIndicativa, temporadas, totalEpisodios, idDiretor) {
-        const titulo = await this.tituloDAO.buscarPorId(id);
+        if (!id) throw new Error("ID é obrigatório");
 
+        const titulo = await this.tituloDAO.buscarPorId(id);
         if (!titulo) {
             throw new Error("Série não encontrada");
         }
 
+        if (!nome?.trim() || temporadas === undefined || totalEpisodios === undefined || !idDiretor) {
+            throw new Error("Todos os campos são obrigatórios para a atualização");
+        }
+
+        const data = new Date(dataLancamento);
+        if (isNaN(data.getTime())) {
+            throw new Error("Data de lançamento inválida");
+        }
+
+        const classeNormalizada = classificacaoIndicativa === "livre" ? "livre" : Number(classificacaoIndicativa);
+        const classificacoesValidas = ["livre", 10, 12, 14, 16, 18];
+        if (!classificacoesValidas.includes(classeNormalizada)) {
+            throw new Error("Insira uma classificação válida.");
+        }
+
+        if (Number(temporadas) <= 0 || Number(totalEpisodios) <= 0) {
+            throw new Error("O número de temporadas e episódios deve ser maior que zero");
+        }
+
+        // CORREÇÃO: Passando o 'id' em vez de 'null' no construtor para persistir corretamente
         const serie = new SerieModel(
-            null,
-            nome,
+            id,
+            nome.trim(),
             dataLancamento,
             classificacaoIndicativa,
             idDiretor,
-            temporadas,
-            totalEpisodios,
+            Number(temporadas),
+            Number(totalEpisodios),
         );
 
         await this.tituloDAO.atualizar(id, serie);
@@ -50,6 +89,7 @@ class SerieService {
     }
 
     async remover(id) {
+        if (!id) throw new Error("ID é obrigatório");
         const titulo = await this.tituloDAO.buscarPorId(id);
 
         if (!titulo) {
@@ -65,6 +105,7 @@ class SerieService {
     }
 
     async buscarPorId(id) {
+        if (!id) throw new Error("ID é obrigatório");
         const titulo = await this.tituloDAO.buscarPorId(id);
 
         if (!titulo) {

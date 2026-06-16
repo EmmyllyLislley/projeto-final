@@ -1,5 +1,4 @@
 const AvaliacaoModel = require("../models/avaliacaoModel");
-
 const AvaliacaoDAO = require("../repository/avaliacaoDAO");
 
 class AvaliacaoService {
@@ -8,33 +7,51 @@ class AvaliacaoService {
     }
 
     async cadastrar(idUsuario, idTitulo, nota, critica) {
-        const avaliacao = new AvaliacaoModel(null, idUsuario, nota, critica);
+        if (!idUsuario || !idTitulo || nota === undefined || nota === null) {
+            throw new Error("Usuário, Título e Nota são obrigatórios");
+        }
 
+        const notaNum = Number(nota);
+        if (isNaN(notaNum) || notaNum < 0 || notaNum > 10) {
+            throw new Error("A nota deve ser um número entre 0 e 10");
+        }
+
+        const avaliacao = new AvaliacaoModel(null, idUsuario, notaNum, critica?.trim() || null);
         const id = await this.avaliacaoDAO.adicionar(avaliacao, idTitulo);
 
         return {
             id,
-            usuario: avaliacao.usuario,
+            idUsuario: avaliacao.idUsuario, // Corrigido de avaliacao.usuario que não existia no new
             nota: avaliacao.nota,
             critica: avaliacao.critica,
         };
     }
 
     async atualizar(id, idUsuario, nota, critica) {
-        const avaliacaoExistente = await this.avaliacaoDAO.buscarPorId(id);
+        if (!id) throw new Error("ID da avaliação é obrigatório");
 
+        const avaliacaoExistente = await this.avaliacaoDAO.buscarPorId(id);
         if (!avaliacaoExistente) {
             throw new Error("Avaliação não encontrada");
         }
 
-        const avaliacao = new AvaliacaoModel(id, idUsuario, nota, critica);
+        if (!idUsuario || nota === undefined || nota === null) {
+            throw new Error("Usuário e Nota são obrigatórios");
+        }
 
+        const notaNum = Number(nota);
+        if (isNaN(notaNum) || notaNum < 0 || notaNum > 10) {
+            throw new Error("A nota deve ser um número entre 0 e 10");
+        }
+
+        const avaliacao = new AvaliacaoModel(id, idUsuario, notaNum, critica?.trim() || null);
         await this.avaliacaoDAO.atualizar(id, avaliacao);
 
         return avaliacao;
     }
 
     async remover(id) {
+        if (!id) throw new Error("ID é obrigatório");
         const avaliacao = await this.avaliacaoDAO.buscarPorId(id);
 
         if (!avaliacao) {
@@ -49,6 +66,7 @@ class AvaliacaoService {
     }
 
     async buscarPorId(id) {
+        if (!id) throw new Error("ID é obrigatório");
         const avaliacao = await this.avaliacaoDAO.buscarPorId(id);
 
         if (!avaliacao) {
@@ -59,6 +77,7 @@ class AvaliacaoService {
     }
 
     async listarPorTitulo(idTitulo) {
+        if (!idTitulo) throw new Error("ID do Título é obrigatório");
         return await this.avaliacaoDAO.listarPorTitulo(idTitulo);
     }
 }

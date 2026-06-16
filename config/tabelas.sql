@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS titulos (
 
 CREATE TABLE IF NOT EXISTS filmes (
     id_filme INT PRIMARY KEY,
-    duracao INT NOT NULL,
+    duracao VARCHAR(50) NOT NULL,
 
     FOREIGN KEY (id_filme) REFERENCES titulos(id)
 );

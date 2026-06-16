@@ -41,7 +41,7 @@ class UsuarioModel {
         }
 
         if (!novaSenha || novaSenha.length < 6) {
-            throw new Error("A nova senha deve nom mínimo 6 caracteres");
+            throw new Error("A nova senha deve ter no mínimo 6 caracteres");
         }
 
         this.#senha = novaSenha;

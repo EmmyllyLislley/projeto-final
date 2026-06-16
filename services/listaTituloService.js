@@ -10,14 +10,16 @@ class ListaTituloService {
     }
 
     async adicionarTituloNaLista(idLista, idTitulo) {
-        const lista = await this.listaDAO.buscarPorId(idLista);
+        if (!idLista || !idTitulo) {
+            throw new Error("ID da lista e ID do título são obrigatórios");
+        }
 
+        const lista = await this.listaDAO.buscarPorId(idLista);
         if (!lista) {
             throw new Error("Lista não encontrada");
         }
 
         const titulo = await this.tituloDAO.buscarPorId(idTitulo);
-
         if (!titulo) {
             throw new Error("Título não encontrado");
         }
@@ -26,12 +28,16 @@ class ListaTituloService {
     }
 
     async removerTituloDaLista(idLista, idTitulo) {
+        if (!idLista || !idTitulo) {
+            throw new Error("ID da lista e ID do título são obrigatórios");
+        }
         await this.listaTituloDAO.removerTituloDaLista(idLista, idTitulo);
     }
 
     async listarTitulosDaLista(idLista) {
-        const lista = await this.listaDAO.buscarPorId(idLista);
+        if (!idLista) throw new Error("ID da lista é obrigatório");
 
+        const lista = await this.listaDAO.buscarPorId(idLista);
         if (!lista) {
             throw new Error("Lista não encontrada");
         }
@@ -40,8 +46,9 @@ class ListaTituloService {
     }
 
     async listarListasDoTitulo(idTitulo) {
-        const titulo = await this.tituloDAO.buscarPorId(idTitulo);
+        if (!idTitulo) throw new Error("ID do título é obrigatório");
 
+        const titulo = await this.tituloDAO.buscarPorId(idTitulo);
         if (!titulo) {
             throw new Error("Título não encontrado");
         }
