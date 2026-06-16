@@ -1,4 +1,5 @@
 const UsuarioService = require("../services/usuarioService");
+const jwt = require('jsonwebtoken')
 
 class UsuarioController {
     constructor() {
@@ -24,7 +25,18 @@ class UsuarioController {
                     email: usuario.email,
                 },
             });
-        } catch (err) {
+
+            const token = jwt.sign(
+                { id: usuario.id, email: usuario.email },
+                process.env.JWT_SECRET, 
+                {   expiresIn: "1d" })
+
+            return res.json({
+                sucesso: true,
+                token: token
+            });
+
+            } catch (err) {
             res.status(400).json({
                 erro: err.message,
             });

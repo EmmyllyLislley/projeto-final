@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Diretor - CineLog</title>
+    <link rel="stylesheet" href = "../public/cadastro-diretor.css">
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-area">
+            <h1>CINE<span>LOG</span></h1>
+            <p style="color: var(--texto-cinza); font-size: 14px; margin-top: 5px;">Novo Diretor</p>
+        </div>
+
+        <div class="input-group">
+            <label for="nome">Nome do Diretor</label>
+            <input type="text" id="nome" placeholder="Ex: Christopher Nolan">
+        </div>
+
+        <button onclick="cadastrarDiretor()">
+            Cadastrar Diretor
+        </button>
+
+        <div class="link-voltar">
+            <a href="index.html">← Voltar para a Página Inicial</a>
+        </div>
+
+        <p id="mensagem"></p>
+    </div>
+
+    <script>
+        async function cadastrarDiretor() {
+            const nome = document.getElementById("nome").value;
+            const mensagem = document.getElementById("mensagem");
+
+            mensagem.className = "";
+            mensagem.innerText = "";
+
+            const token = localStorage.getItem("token");
+
+            try {
+                // Rota baseada em seu diretorRoutes.js
+                const resposta = await fetch("http://localhost:3000/diretores", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ nome })
+                });
+
+                const dados = await resposta.json();
+
+                if (resposta.ok) {
+                    mensagem.classList.add("msg-sucesso");
+                    mensagem.innerText = dados.mensagem || "Diretor cadastrado com sucesso!";
+                    document.getElementById("nome").value = "";
+                } else {
+                    mensagem.classList.add("msg-erro");
+                    mensagem.innerText = dados.erro || "Erro ao cadastrar diretor.";
+                }
+
+            } catch (erro) {
+                mensagem.classList.add("msg-erro");
+                mensagem.innerText = "Erro ao conectar com o servidor.";
+                console.error(erro);
+            }
+        }
+    </script>
+</body>
+</html>

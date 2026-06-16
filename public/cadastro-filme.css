@@ -1,0 +1,146 @@
+        :root {
+            --bg-principal: #090b11;     
+            --bg-card: #151a26;          
+            --azul-destaque: #2563eb;   
+            --azul-hover: #1d4ed8;
+            --texto-branco: #ffffff;
+            --texto-cinza: #94a3b8;
+            --borda-input: #262f45;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-principal);
+            background-image: radial-gradient(circle at center, #131b2e 0%, #090b11 100%);
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--bg-card);
+            padding: 40px 35px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            border: 1px solid #1e2638;
+        }
+
+        .header-area {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--texto-branco);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        h1 span {
+            color: var(--azul-destaque);
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--texto-cinza);
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            background: #0d111a;
+            border: 1px solid var(--borda-input);
+            border-radius: 8px;
+            color: var(--texto-branco);
+            font-size: 15px;
+            transition: all 0.2s ease-in-out;
+        }
+
+    
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        input::placeholder {
+            color: var(--texto-cinza);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--azul-destaque);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            background: #090c12;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: var(--azul-destaque);
+            color: var(--texto-branco);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background: var(--azul-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .link-voltar {
+            text-align: center;
+        }
+
+        .link-voltar a {
+            text-decoration: none;
+            color: var(--texto-cinza);
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .link-voltar a:hover {
+            color: var(--texto-branco);
+            text-decoration: underline;
+        }
+
+        #mensagem {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 20px;
+        }
+        
+        .msg-sucesso {
+            color: #10b981; 
+        }
+        
+        .msg-erro {
+            color: #ef4444; 
+        }

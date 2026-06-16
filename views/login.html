@@ -1,85 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/login.css">
     <title>Login - Catálogo</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
 
-        body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #1e293b;
-        }
-
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 350px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: #2563eb;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background: #1d4ed8;
-        }
-
-        #mensagem {
-            margin-top: 15px;
-            text-align: center;
-        }
-    </style>
 </head>
+
 <body>
 
     <div class="container">
-        <h1>Login</h1>
+        <div class="logo-area">
+            <h1>CINE<span>LOG</span></h1>
+        </div>
 
-        <input
-            type="email"
-            id="email"
-            placeholder="Digite seu email"
-        >
+        <div>
+            <h4> Seu catálogo de filmes e séries </h4>
+        </div>
 
-        <input
-            type="password"
-            id="senha"
-            placeholder="Digite sua senha"
-        >
+        <div class="input-group">
+            <input type="email" id="email" placeholder="Digite seu email" autocomplete="email">
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="senha" placeholder="Digite sua senha">
+        </div>
 
         <button onclick="fazerLogin()">
             Entrar
         </button>
+
+        <div>
+            <h4><a class="cadastro" href="cadastro.html">Não tem uma conta? Cadastre-se agora!</a></h4>
+        </div>
 
         <p id="mensagem"></p>
     </div>
@@ -92,6 +48,12 @@
 
             const senha =
                 document.getElementById("senha").value;
+
+            const mensagem =
+                document.getElementById("mensagem");
+
+
+            mensagem.className = "";
 
             try {
 
@@ -111,26 +73,31 @@
 
                 const dados = await resposta.json();
 
-                const mensagem =
-                    document.getElementById("mensagem");
-
                 if (resposta.ok) {
 
+                    mensagem.classList.add("msg-sucesso");
                     mensagem.innerText =
-                        "Login realizado com sucesso!";
+                        "Login realizado com sucesso! Redirecionando...";
+
+                    localStorage.setItem("token", dados.token)
 
                     console.log(dados);
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 600);
+
 
                 } else {
 
+                    mensagem.classList.add("msg-erro");
                     mensagem.innerText =
                         dados.erro || "Erro ao fazer login";
                 }
 
             } catch (erro) {
 
-                document.getElementById("mensagem")
-                    .innerText =
+                mensagem.classList.add("msg-erro");
+                mensagem.innerText =
                     "Erro ao conectar com o servidor";
 
                 console.error(erro);
@@ -139,4 +106,5 @@
     </script>
 
 </body>
+
 </html>

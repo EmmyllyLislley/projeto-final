@@ -3,7 +3,7 @@ const mysql = require("mysql2");
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "root",
     database: "catalogo"
 });
 
@@ -13,7 +13,7 @@ connection.connect((err) => {
         return;
     }
 
-    console.log("Conectado ao banco!");
+    console.log(`Conectado ao banco na porta 3000`);
 });
 
 module.exports = connection;

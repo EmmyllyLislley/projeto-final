@@ -1,0 +1,291 @@
+
+        :root {
+            --bg-principal: #090b11;    
+            --bg-card: #151a26;          
+            --azul-destaque: #2563eb;   
+            --azul-hover: #1d4ed8;
+            --texto-branco: #ffffff;
+            --texto-cinza: #94a3b8;     
+            --borda-card: #1e2638;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            background-image: radial-gradient(circle at top, #131b2e 0%, #090b11 60%);
+            color: var(--texto-branco);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            background: #090b11;
+            color: white;
+            font-family: sans-serif;
+
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 6%;
+            background: rgba(21, 26, 38, 0.8);
+            backdrop-filter: blur(12px); /* Efeito de vidro fosco moderno */
+            border-bottom: 1px solid var(--borda-card);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header h1 span {
+            color: var(--azul-destaque);
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            color: var(--texto-branco);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .buttons a[href*="login"] {
+            background: transparent;
+            color: var(--texto-cinza);
+        }
+
+        .buttons a[href*="login"]:hover {
+            color: var(--texto-branco);
+        }
+        .buttons a[href*="cadastro"] {
+            background: var(--azul-destaque);
+        }
+
+        .buttons a[href*="cadastro"]:hover {
+            background: var(--azul-hover);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 15px;
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--texto-cinza);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 30px;
+            padding: 40px 6%;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;               
+            border: 1px solid var(--borda-card);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-poster {
+            width: 100%;
+            height: 320px;
+            background: #0d111a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--borda-card);
+            position: relative;
+            color: #1e2638;
+            font-size: 48px;
+            transition: background 0.3s ease;
+        }
+
+        [name="Inception"] {
+            background-image: url("posters/inception.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        [name="Duna"] {
+            background-image: url("posters/duna.png");
+            background-size: cover;
+            background-position: center;
+        }
+        [name="Interstellar"] {
+            background-image: url("posters/interstellar.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        [name="Blade Runner 2049"] {
+            background-image: url("posters/blade runner 2049.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+    
+        .card-poster::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(transparent, #151a26);
+        }
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--texto-branco);
+            transition: color 0.2s ease;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--texto-cinza);
+            line-height: 1.5;
+        }
+
+   
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--azul-destaque);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .card:hover .card-poster {
+        
+            color: var(--azul-destaque);
+        }
+
+        .card:hover h3 {
+            color: var(--azul-destaque);
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--borda-card);
+            color: #475569;
+            font-size: 14px;
+        }
+
+
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: #0c0f17;
+            border-right: 1px solid #1e2638;
+            position: fixed;
+        }
+        .sidebar h2 { padding: 20px; color: #2563eb; margin: 0; }
+        
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .sidebar button:hover, .sidebar button.ativo {
+            color: white;
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .conteudo {
+            margin-left: 240px; 
+            padding: 40px;
+            width: 100%;
+        }
+
+        .secao { display: none; }
+        .secao.ativa { display: block; }
+
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #1e2638; text-align: left; }
+        th { color: #94a3b8; }
+
+        /* 1. Garanta que a sua barra lateral tenha uma largura fixa (ex: 240px) */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #0c0f17; /* Cor escura que você já está usando */
+    z-index: 100; /* Garante que ela não suma */
+}
+
+/* 2. O CORRETOR DO ERRO: Empurra todo o resto da página para a direita */
+.container, .hero {
+    margin-left: 240px; /* Tem que ser exatamente o mesmo valor da largura da sidebar */
+    width: calc(100% - 240px); /* Ajusta a largura restante para não quebrar o grid */
+    box-sizing: border-box;
+}
+
+/* Se o seu Header (onde tem o botão Sair) sumiu ou quebrou, ajuste ele também: */
+header {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    box-sizing: border-box;
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Filme - CineLog</title>
+    <link rel="stylesheet" href="../public/cadastro-filme.css">
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-area">
+            <h1>CINE<span>LOG</span></h1>
+            <p style="color: var(--texto-cinza); font-size: 14px; margin-top: 5px;">Novo Filme</p>
+        </div>
+
+        <div class="input-group">
+            <label for="nome">Título do Filme</label>
+            <input type="text" id="nome" placeholder="Ex: Interestelar">
+        </div>
+
+        <div class="input-group">
+            <label for="dataLancamento">Data de Lançamento</label>
+            <input type="date" id="dataLancamento">
+        </div>
+
+        <div class="input-group">
+            <label for="classificacao">Classificação Indicativa</label>
+            <select id="classificacao">
+                <option value="livre">Livre</option>
+                <option value="10">10 anos</option>
+                <option value="12">12 anos</option>
+                <option value="14">14 anos</option>
+                <option value="16">16 anos</option>
+                <option value="18">18 anos</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="duracao">Duração (em minutos)</label>
+            <input type="number" id="duracao" placeholder="Ex: 169" min="1">
+        </div>
+
+        <div class="input-group">
+            <label for="idDiretor">ID do Diretor</label>
+            <input type="number" id="idDiretor" placeholder="Ex: 1" min="1">
+        </div>
+
+        <button onclick="cadastrarFilme()">
+            Cadastrar Filme
+        </button>
+
+        <div class="link-voltar">
+            <a href="index.html">
+                ← Voltar para a Página Inicial
+            </a>
+        </div>
+
+        <p id="mensagem"></p>
+    </div>
+
+    <script>
+        async function cadastrarFilme() {
+            const nome = document.getElementById("nome").value;
+            const dataLancamento = document.getElementById("dataLancamento").value;
+            const duracao = document.getElementById("duracao").value;
+            const idDiretor = document.getElementById("idDiretor").value;
+            const mensagem = document.getElementById("mensagem");
+
+            let classificacaoIndicativa = document.getElementById("classificacao").value;
+
+
+            mensagem.className = "";
+            mensagem.innerText = "";
+
+     
+            if (classificacaoIndicativa !== "livre") {
+                classificacaoIndicativa = parseInt(classificacaoIndicativa);
+            }
+
+          
+            const token = localStorage.getItem("token");
+
+            try {
+                const resposta = await fetch("http://localhost:3000/filmes", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                     
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        nome,
+                        dataLancamento,
+                        classificacaoIndicativa,
+                        duracao: parseInt(duracao), 
+                        idDiretor: parseInt(idDiretor)
+                    })
+                });
+
+                const dados = await resposta.json();
+
+                if (resposta.ok) {
+                    mensagem.classList.add("msg-sucesso");
+                    mensagem.innerText = dados.mensagem || "Filme cadastrado com sucesso!";
+
+            
+                    document.getElementById("nome").value = "";
+                    document.getElementById("dataLancamento").value = "";
+                    document.getElementById("duracao").value = "";
+                    document.getElementById("idDiretor").value = "";
+                    document.getElementById("classificacao").value = "livre";
+
+                } else {
+                    mensagem.classList.add("msg-erro");
+                    mensagem.innerText = dados.erro || "Erro ao cadastrar o filme.";
+                }
+
+            } catch (erro) {
+                mensagem.classList.add("msg-erro");
+                mensagem.innerText = "Erro ao conectar com o servidor.";
+                console.error(erro);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Completo - CineLog</title>
+    <link rel="stylesheet" href="../public/catalogo.css">
+    
+
+</head>
+<body>
+
+    <header>
+        <h1>CINE<span>LOG</span></h1>
+        <div class="nav-links">
+            <a href="index.html">Início</a>
+            <a href="cadastro-filme.html">Cadastrar Filme</a>
+            <a href="cadastro-diretor.html">Cadastrar Diretor</a>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="page-title">
+            <h2>Catálogo Completo</h2>
+            <p style="color: var(--texto-cinza); font-size: 14px; margin-top: 4px;">Explore todos os filmes e séries disponíveis</p>
+        </div>
+
+        <div class="catalog-grid" id="container-catalogo">
+            <p style="color: var(--texto-cinza);">Carregando títulos...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", carregarCatalogoCompleto);
+
+        async function carregarCatalogoCompleto() {
+            const container = document.getElementById("container-catalogo");
+            
+            try {
+                // 1. Faz a requisição para buscar os filmes do backend (conforme seu filmeController.js)
+                const respostaFilmes = await fetch("http://localhost:3000/filmes");
+                const dadosFilmes = await respostaFilmes.json();
+                let listaFilmes = dadosFilmes.filmes || [];
+
+                // 2. Faz a requisição para buscar as séries (ajuste a URL se o seu backend usar outra rota)
+                let listaSeries = [];
+                try {
+                    const respostaSeries = await fetch("http://localhost:3000/series");
+                    if (respostaSeries.ok) {
+                        const dadosSeries = await respostaSeries.json();
+                        listaSeries = dadosSeries.series || [];
+                    }
+                } catch (e) {
+                    console.warn("Rota de séries não encontrada ou offline. Exibindo apenas filmes.");
+                }
+
+                // Unifica as duas listas em uma só estrutura de dados
+                const catalogoTotal = [...listaFilmes, ...listaSeries];
+
+                if (catalogoTotal.length === 0) {
+                    container.innerHTML = `<p style="color: var(--texto-cinza);">Nenhum título cadastrado no momento.</p>`;
+                    return;
+                }
+
+                // Limpa o container antes de renderizar
+                container.innerHTML = "";
+
+                catalogoTotal.forEach(item => {
+                    // Cria a estrutura base do Card
+                    const card = document.createElement("div");
+                    card.className = "card";
+
+                    // Verifica as propriedades para descobrir se o item é Filme ou Série
+                    let secaoDetalhes = "";
+                    let badgeTipo = "";
+
+                    if (item.duracao !== undefined) {
+                        // É UM FILME! (Possui a propriedade duracao do seu filmeController)
+                        badgeTipo = `<span class="type-badge badge-filme">Filme</span>`;
+                        secaoDetalhes = `⏱️ ${item.duracao} min`;
+                    } else {
+                        // É UMA SÉRIE! (Possui propriedades de temporadas/episódios)
+                        badgeTipo = `<span class="type-badge badge-serie">Série</span>`;
+                        const caps = item.episodiosTotais || 0;
+                        const temps = item.numeroTemporadas || 0;
+                        secaoDetalhes = `📺 ${temps} Temp. • ${caps} Eps`;
+                    }
+
+                    // Formatação amigável da Classificação Indicativa
+                    const classif = item.classificacaoIndicativa === "livre" ? "Livre" : `${item.classificacaoIndicativa}+`;
+
+                    // Injeta a estrutura interna. O "name" do poster serve para puxar do CSS antigo se houver mapeamento
+                    card.innerHTML = `
+                        ${badgeTipo}
+                        <div class="card-poster" name="${item.nome}">
+                            <div class="poster-fallback-title">${item.nome}</div>
+                        </div>
+                        <div class="card-info">
+                            <h3>${item.nome}</h3>
+                            <div class="meta-details">
+                                <span class="classificacao">${classif}</span>
+                                <span>${secaoDetalhes}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+
+            } catch (erro) {
+                container.innerHTML = `<p style="color: #ef4444;">Erro ao carregar os dados do catálogo.</p>`;
+                console.error("Erro no fetch do catálogo:", erro);
+            }
+        }
+    </script>
+</body>
+</html>

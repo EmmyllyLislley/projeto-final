@@ -3,136 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Filmes</title>
+    <link rel="stylesheet" href="../public/index.css">
+    <title>Catálogo de Filmes - CineLog</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
 
-        body {
-            background: #0f172a;
-            color: #fff;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background: #111827;
-        }
-
-        header h1 {
-            font-size: 20px;
-        }
-
-        .buttons a {
-            text-decoration: none;
-            color: white;
-            margin-left: 10px;
-            padding: 8px 14px;
-            border-radius: 6px;
-            background: #3b82f6;
-        }
-
-        .buttons a:hover {
-            background: #2563eb;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .hero h2 {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            color: #cbd5e1;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 40px;
-        }
-
-        .card {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-        }
-
-        .card p {
-            font-size: 14px;
-            color: #94a3b8;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #64748b;
-        }
-    </style>
 </head>
 
 <body>
 
 <header>
-    <h1>🎬 Catálogo de Filmes</h1>
-
-    <div class="buttons">
-        <a href="/views/login.html">Login</a>
-        <a href="/views/cadastro.html">Cadastro</a>
+    <h1>CINE<span>LOG</span></h1>
+    <div class="buttons" id="botoes-autenticacao">
     </div>
 </header>
 
+<div class="sidebar">
+        <h2>CINE<span>LOG</span></h2>
+        <button class="btn-menu ativo" onclick="mudarAba('tela-filmes', this)">🎬 Filmes</button>
+        <button class="btn-menu" onclick="mudarAba('tela-usuarios', this)">👤 Usuários</button>
+        <button class="btn-menu" onclick="mudarAba('tela-diretores', this)">🎥 Diretores</button>
+        <hr style="border-color: #1e2638; margin: 10px 0;">
+        <button onclick="window.location.href='cadastro-filme.html'">➕ Novo Filme</button>
+        <button onclick="window.location.href='cadastro-diretor.html'">➕ Novo Diretor</button>
+    </div>
+
+    <div class="conteudo">
+        
+        <div id="tela-filmes" class="secao ativa">
+            <h3>Filmes Cadastrados</h3>
+            <div id="lista-filmes" style="margin-top:20px;">Carregando...</div>
+        </div>
+
+        <div id="tela-usuarios" class="secao">
+            <h3>Lista de Usuários</h3>
+            <table>
+                <thead>
+                    <tr><th>ID</th><th>E-mail</th></tr>
+                </thead>
+                <tbody id="lista-usuarios"></tbody>
+            </table>
+        </div>
+
+        <div id="tela-diretores" class="secao">
+            <h3>Lista de Diretores</h3>
+            <table>
+                <thead>
+                    <tr><th>ID</th><th>Nome</th></tr>
+                </thead>
+                <tbody id="lista-diretores"></tbody>
+            </table>
+        </div>
+
+    </div>
+
 <section class="hero">
-    <h2>Bem-vindo ao CineLog</h2>
-    <p>Explore filmes, cadastre e gerencie seu catálogo.</p>
+    <h2>Explore novas histórias</h2>
+    <p>Seu gerenciador pessoal de cinema. Descubra títulos, organize suas listas e monte o catálogo perfeito de forma simples e intuitiva.</p>
 </section>
 
-<!-- <section class="container">
+<section class="container">
     <div class="card">
-        <h3>Filme 1</h3>
-        <p>Descrição do filme aqui...</p>
+        <div class="card-poster" name="Interstellar"></div>
+        <div class="card-content">
+            <h3>Interestelar</h3>
+            <p>Uma equipe de exploradores viaja através de um buraco de minhoca no espaço na tentativa de garantir a sobrevivência da humanidade.</p>
+        </div>
     </div>
 
     <div class="card">
-        <h3>Filme 2</h3>
-        <p>Descrição do filme aqui...</p>
+        <div class="card-poster" name="Blade Runner 2049"></div>
+        <div class="card-content">
+            <h3>Blade Runner 2049</h3>
+            <p>Um novo blade runner descobre um segredo há muito enterrado que tem o potencial de mergulhar o que resta da sociedade no caos.</p>
+        </div>
     </div>
 
     <div class="card">
-        <h3>Filme 3</h3>
-        <p>Descrição do filme aqui...</p>
+        <div class="card-poster" name="Inception"></div>
+        <div class="card-content">
+            <h3>A Origem</h3>
+            <p>Um ladrão que rouba segredos corporativos por meio do uso de tecnologia de compartilhamento de sonhos tem a chance de limpar seu histórico.</p>
+        </div>
     </div>
 
     <div class="card">
-        <h3>Filme 4</h3>
-        <p>Descrição do filme aqui...</p>
+        <div class="card-poster" name="Duna"></div>
+        <div class="card-content">
+            <h3>Duna</h3>
+            <p>Adaptação mítica e emocionante da jornada de Paul Atreides, um jovem brilhante e talentoso nascido com um grande destino.</p>
+        </div>
     </div>
-</section> -->
+</section>
 
 <footer>
     <p>© 2026 - CineLog</p>
 </footer>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem("token");
+        const containerBotoes = document.getElementById("botoes-autenticacao");
+
+        if (token) {
+          
+            containerBotoes.innerHTML = `
+                <a href="#" onclick="logout()" style="background: #ef4444;">Sair</a>
+            `;
+            
+        } if(!token) {
+            window.location.href = "login.html" 
+            containerBotoes.innerHTML = `
+                <a href="/views/login.html">Login</a>
+                <a href="/views/cadastro.html">Cadastro</a>
+            `;
+        }
+
+    });
+
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.reload(); 
+    }
+    function mudarAba(idDaTela, botaoClicado) {
+
+            document.querySelectorAll('.secao').forEach(tela => tela.classList.remove('ativa'));
+
+            document.querySelectorAll('.btn-menu').forEach(btn => btn.classList.remove('ativo'));
+
+
+            document.getElementById(idDaTela).classList.add('ativa');
+
+            botaoClicado.classList.add('ativo');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            pegarFilmes();
+            pegarUsuarios();
+            pegarDiretores();
+        });
+
+        async function pegarFilmes() {
+            const res = await fetch("http://localhost:3000/filmes");
+            const dados = await res.json();
+  
+            document.getElementById("lista-filmes").innerHTML = dados.filmes.map(f => `
+                <p>• <b>${f.nome}</b> - ${f.duracao} min</p>
+            `).join('');
+        }
+
+        async function pegarUsuarios() {
+            const res = await fetch("http://localhost:3000/usuarios");
+            const dados = await res.json();
+            document.getElementById("lista-usuarios").innerHTML = dados.usuarios.map(u => `
+                <tr><td>#${u.id}</td><td>${u.email}</td></tr>
+            `).join('');
+        }
+
+        async function pegarDiretores() {
+            const res = await fetch("http://localhost:3000/diretores");
+            const dados = await res.json();
+            document.getElementById("lista-diretores").innerHTML = dados.diretores.map(d => `
+                <tr><td>#${d.id}</td><td>${d.nome}</td></tr>
+            `).join('');
+        }
+</script>
 
 </body>
 </html>
