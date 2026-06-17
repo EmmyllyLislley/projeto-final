@@ -94,6 +94,18 @@ class TituloDAO {
             });
         });
     }
-}
+    cadastrarRelacaoGenero(idTitulo, idGenero) {
+        const sql = `INSERT INTO titulos_generos (id_titulo, id_genero) VALUES (?, ?)`;
 
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql, [idTitulo, idGenero], (err, result) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(result);
+            });
+        });
+    }
+}
 module.exports = new TituloDAO();

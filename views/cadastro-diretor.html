@@ -30,45 +30,78 @@
 
         <p id="mensagem"></p>
     </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem("token");
+        const containerBotoes = document.getElementById("botoes-autenticacao");
 
-    <script>
-        async function cadastrarDiretor() {
-            const nome = document.getElementById("nome").value;
-            const mensagem = document.getElementById("mensagem");
-
-            mensagem.className = "";
-            mensagem.innerText = "";
-
-            const token = localStorage.getItem("token");
-
-            try {
-                // Rota baseada em seu diretorRoutes.js
-                const resposta = await fetch("http://localhost:3000/diretores", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ nome })
-                });
-
-                const dados = await resposta.json();
-
-                if (resposta.ok) {
-                    mensagem.classList.add("msg-sucesso");
-                    mensagem.innerText = dados.mensagem || "Diretor cadastrado com sucesso!";
-                    document.getElementById("nome").value = "";
-                } else {
-                    mensagem.classList.add("msg-erro");
-                    mensagem.innerText = dados.erro || "Erro ao cadastrar diretor.";
-                }
-
-            } catch (erro) {
-                mensagem.classList.add("msg-erro");
-                mensagem.innerText = "Erro ao conectar com o servidor.";
-                console.error(erro);
-            }
+        if (token) {
+            containerBotoes.innerHTML = `<a href="#" onclick="logout()" style="background: #ef4444;">Sair</a>`;
+        } else {
+            // Se não quiser que o sistema obrigue o login no teste, comente a linha abaixo:
+            window.location.href = "login.html"; 
+            containerBotoes.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="cadastro.html">Cadastro</a>
+            `;
         }
-    </script>
+
+        // Carrega os dados se não for redirecionado
+        pegarFilmes();
+        pegarUsuarios();
+        pegarDiretores();
+    });
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.reload(); 
+    }
+
+    function mudarAba(idDaTela, botaoClicado) {
+        document.querySelectorAll('.secao').forEach(tela => tela.classList.remove('ativa'));
+        document.querySelectorAll('.btn-menu').forEach(btn => btn.classList.remove('ativo'));
+        document.getElementById(idDaTela).classList.add('ativa');
+        botaoClicado.classList.add('ativo');
+    }
+
+    async function pegarFilmes() {
+        try {
+            const res = await fetch("http://localhost:3000/filmes");
+            const dados = await res.json();
+            const lista = dados.filmes || dados; // Trata se vier array direto ou objeto
+            document.getElementById("lista-filmes").innerHTML = lista.map(f => `
+                <p>• <b>${f.nome}</b> - ${f.duracao} min</p>
+            `).join('');
+        } catch {
+            document.getElementById("lista-filmes").innerText = "Erro ao carregar filmes.";
+        }
+    }
+
+    async function pegarUsuarios() {
+        try {
+            const res = await fetch("http://localhost:3000/usuarios");
+            const dados = await res.json();
+            const lista = dados.usuarios || dados;
+            document.getElementById("lista-usuarios").innerHTML = lista.map(u => `
+                <tr><td>#${u.id}</td><td>${u.email}</td></tr>
+            `).join('');
+        } catch {
+            document.getElementById("lista-usuarios").innerHTML = "<tr><td colspan='2'>Erro ao carregar</td></tr>";
+        }
+    }
+
+    async function pegarDiretores() {
+        try {
+            const res = await fetch("http://localhost:3000/diretores");
+            const dados = await res.json();
+            const lista = dados.diretores || dados;
+            document.getElementById("lista-diretores").innerHTML = lista.map(d => `
+                <tr><td>#${d.id}</td><td>${d.nome}</td></tr>
+            `).join('');
+        } catch {
+            document.getElementById("lista-diretores").innerHTML = "<tr><td colspan='2'>Erro ao carregar</td></tr>";
+        }
+    }
+</script>
 </body>
 </html>

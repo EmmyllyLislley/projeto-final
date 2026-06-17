@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>CineLog - Super Simples</title>
+    <style>
+        body { background: #090b11; color: white; font-family: sans-serif; padding: 20px; }
+        input, select { padding: 8px; margin: 5px; background: #0d111a; color: white; border: 1px solid #262f45; }
+        button { padding: 8px; margin: 5px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #1e2638; padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" style="color: #2563eb;">← Voltar ao Painel</a>
+
+    <hr>
+    <h2>🎭 Gerenciar Gêneros</h2>
+    <input type="hidden" id="gen-id">
+    <input type="text" id="gen-nome" placeholder="Nome do Gênero">
+    <button onclick="salvarGenero()" style="background: #2563eb; color: white;">Salvar</button>
+    <button onclick="limparGen()" style="background: gray;">Cancelar</button>
+    
+    <table>
+        <thead><tr><th>ID</th><th>Nome</th><th>Ações</th></tr></thead>
+        <tbody id="tab-generos"></tbody>
+    </table>
+
+    <hr>
+    <h2>👤 Gerenciar Atores</h2>
+    <input type="hidden" id="ator-id">
+    <input type="text" id="ator-nome" placeholder="Nome do Ator">
+    <button onclick="salvarAtor()" style="background: #2563eb; color: white;">Salvar</button>
+    <button onclick="limparAtor()" style="background: gray;">Cancelar</button>
+
+    <table>
+        <thead><tr><th>ID</th><th>Nome</th><th>Ações</th></tr></thead>
+        <tbody id="tab-atores"></tbody>
+    </table>
+
+    <script>
+        const API = "http://localhost:3000";
+
+        // Roda ao carregar a página
+        document.addEventListener("DOMContentLoaded", () => {
+            listarGeneros();
+            listarAtores();
+        });
+
+        // ==================== GÊNEROS ====================
+        async function listarGeneros() {
+            const res = await fetch(`${API}/generos`);
+            const dados = await res.json();
+            document.getElementById("tab-generos").innerHTML = (dados.generos || []).map(g => `
+                <tr>
+                    <td>${g.id}</td>
+                    <td>${g.nome}</td>
+                    <td>
+                        <button onclick="prepararGen(${g.id}, '${g.nome}')" style="background: yellow;">Editar</button>
+                        <button onclick="deletarGen(${g.id})" style="background: red; color: white;">X</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function salvarGenero() {
+            const id = document.getElementById("gen-id").value;
+            const nome = document.getElementById("gen-nome").value;
+            
+            // Se tem ID, atualiza (PUT). Se não tem, cria (POST).
+            const metodo = id ? "PUT" : "POST";
+            const rota = id ? `${API}/generos/${id}` : `${API}/generos`;
+
+            await fetch(rota, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome })
+            });
+            limparGen(); listarGeneros();
+        }
+
+        function prepararGen(id, nome) {
+            document.getElementById("gen-id").value = id;
+            document.getElementById("gen-nome").value = nome;
+        }
+
+        function limparGen() {
+            document.getElementById("gen-id").value = "";
+            document.getElementById("gen-nome").value = "";
+        }
+
+        async function deletarGen(id) {
+            if (confirm("Deletar gênero?")) {
+                await fetch(`${API}/generos/${id}`, { method: "DELETE" });
+                listarGeneros();
+            }
+        }
+
+        // ==================== ATORES ====================
+        async function listarAtores() {
+            const res = await fetch(`${API}/atores`);
+            const dados = await res.json();
+            document.getElementById("tab-atores").innerHTML = (dados.atores || []).map(a => `
+                <tr>
+                    <td>${a.id}</td>
+                    <td>${a.nome}</td>
+                    <td>
+                        <button onclick="prepararAtor(${a.id}, '${a.nome}')" style="background: yellow;">Editar</button>
+                        <button onclick="deletarAtor(${a.id})" style="background: red; color: white;">X</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function salvarAtor() {
+            const id = document.getElementById("ator-id").value;
+            const nome = document.getElementById("ator-nome").value;
+            const metodo = id ? "PUT" : "POST";
+            const rota = id ? `${API}/atores/${id}` : `${API}/atores`;
+
+            await fetch(rota, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome })
+            });
+            limparAtor(); listarAtores();
+        }
+
+        function prepararAtor(id, nome) {
+            document.getElementById("ator-id").value = id;
+            document.getElementById("ator-nome").value = nome;
+        }
+
+        function limparAtor() {
+            document.getElementById("ator-id").value = "";
+            document.getElementById("ator-nome").value = "";
+        }
+
+        async function deletarAtor(id) {
+            if (confirm("Deletar ator?")) {
+                await fetch(`${API}/atores/${id}`, { method: "DELETE" });
+                listarAtores();
+            }
+        }
+    </script>
+</body>
+</html>

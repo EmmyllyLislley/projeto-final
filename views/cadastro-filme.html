@@ -37,28 +37,22 @@
             </select>
         </div>
 
-        <div class="input-group">
-            <label for="genero">Gênero</label>
-            <select id="genero">
-                <option value="livre">Livre</option>
-                <option value="10">10 anos</option>
-                <option value="12">12 anos</option>
-                <option value="14">14 anos</option>
-                <option value="16">16 anos</option>
-                <option value="18">18 anos</option>
-            </select>
-        </div>
+
 
         <div class="input-group">
             <label for="duracao">Duração (em minutos)</label>
             <input type="number" id="duracao" placeholder="Ex: 169" min="1">
         </div>
 
-        <div class="input-group">
-            <label for="idDiretor">ID do Diretor</label>
-            <select id="generos" multiple></select>
-        </div>
+      <div class="input-group">
+    <label for="idDiretor">Diretor</label>
+    <select id="idDiretor"></select>
+</div>
 
+<div class="input-group">
+    <label for="generos">Gêneros (Segure Ctrl para selecionar vários)</label>
+    <select id="generos" multiple></select>
+</div>
         <button onclick="cadastrarFilme()">
             Cadastrar Filme
         </button>
@@ -72,109 +66,90 @@
         <p id="mensagem"></p>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            carregarDiretores();
-            carregarGeneros();
-        });
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        carregarDiretores();
+        carregarGeneros();
+    });
 
-        async function carregarDiretores() {
-            const selectDiretor = document.getElementById("idDiretor");
-            try {
-                const res = await fetch("http://localhost:3000/diretores");
-                const dados = await res.json();
-                const diretores = dados.diretores || [];
+    async function carregarDiretores() {
+        const selectDiretor = document.getElementById("idDiretor");
+        try {
+            const res = await fetch("http://localhost:3000/diretores");
+            const dados = await res.json();
+            const diretores = dados.diretores || dados; // Garante o mapeamento se vier array direto
+            selectDiretor.innerHTML = diretores.map(d => `<option value="${d.id}">${d.nome}</option>`).join('');
+        } catch {
+            selectDiretor.innerHTML = '<option value="">Erro ao carregar diretores</option>';
+        }
+    }
 
-                if(diretores.length === 0) {
-                    selectDiretor.innerHTML = '<option value="">Nenhum diretor cadastrado</option>';
-                    return;
-                }
-                selectDiretor.innerHTML = diretores.map(d => 'option value="${d.id}">${d.nome}</option>').join('');
-            } catch {
-                selectDiretor.innerHTML = '<option value="">Erro ao carregar diretores</option>'
-            }
+    async function carregarGeneros() {
+        const selectGeneros = document.getElementById("generos");
+        try {
+            const resposta = await fetch("http://localhost:3000/generos");
+            const dados = await resposta.json();
+            const generos = dados.generos || dados;
+            selectGeneros.innerHTML = generos.map(g => `<option value="${g.id}">${g.nome}</option>`).join('');
+        } catch (err) {
+            console.error("Erro ao buscar gêneros:", err);
+            selectGeneros.innerHTML = '<option value="">Erro ao carregar gêneros</option>';
+        }
+    }
 
+    async function cadastrarFilme() {
+        const nome = document.getElementById("nome").value;
+        const dataLancamento = document.getElementById("dataLancamento").value;
+        const duracao = document.getElementById("duracao").value;
+        const idDiretor = document.getElementById("idDiretor").value;
+        const mensagem = document.getElementById("mensagem");
+        const selectGeneros = document.getElementById("generos");
+        const generosSelecionados = Array.from(selectGeneros.selectedOptions).map(option => parseInt(option.value));
+        let classificacaoIndicativa = document.getElementById("classificacao").value;
+
+        mensagem.className = "";
+        mensagem.innerText = "";
+
+        if (classificacaoIndicativa !== "livre") {
+            classificacaoIndicativa = parseInt(classificacaoIndicativa);
         }
 
-        async function carregarGeneros() {
-            const selectGeneros = document.getElementById("generos");
-            try {
-                const res = await fetch("http://localhost:3000/generos");
-                const generos = dados.generos || [];
+        const token = localStorage.getItem("token");
 
-                selectGeneros.innerHTML = generos.map(g => `
-                    <option value="${g.id}">${g.nome}</option>
-                `).join('');
-            } catch (err) {
-                selectGeneros.innerHTML = '<option value="">Erro ao carregar gêneros</option>';
+        try {
+            const resposta = await fetch("http://localhost:3000/filmes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    nome,
+                    dataLancamento,
+                    classificacaoIndicativa,
+                    duracao: parseInt(duracao), 
+                    idDiretor: parseInt(idDiretor),
+                    generos: generosSelecionados
+                })
+            });
+
+            const dados = await resposta.json();
+
+            if (resposta.ok) {
+                mensagem.className = "msg-sucesso";
+                mensagem.innerText = dados.mensagem || "Filme cadastrado com sucesso!";
+                document.getElementById("nome").value = "";
+                document.getElementById("dataLancamento").value = "";
+                document.getElementById("duracao").value = "";
+            } else {
+                mensagem.className = "msg-erro";
+                mensagem.innerText = dados.erro || "Erro ao cadastrar o filme.";
             }
+        } catch (erro) {
+            mensagem.className = "msg-erro";
+            mensagem.innerText = "Erro ao conectar com o servidor.";
         }
-
-        async function cadastrarFilme() {
-            const nome = document.getElementById("nome").value;
-            const dataLancamento = document.getElementById("dataLancamento").value;
-            const duracao = document.getElementById("duracao").value;
-            const idDiretor = document.getElementById("idDiretor").value;
-            const mensagem = document.getElementById("mensagem");
-
-            const selectGeneros = document.getElementById("generos");
-            const generosSelecionados = Array.from(selectGeneros.selectedOptions).map(option => option.value);
-            let classificacaoIndicativa = document.getElementById("classificacao").value;
-
-
-            mensagem.className = "";
-            mensagem.innerText = "";
-
-     
-            if (classificacaoIndicativa !== "livre") {
-                classificacaoIndicativa = parseInt(classificacaoIndicativa);
-            }
-
-          
-            const token = localStorage.getItem("token");
-
-            try {
-                const resposta = await fetch("http://localhost:3000/filmes", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                     
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        nome,
-                        dataLancamento,
-                        classificacaoIndicativa,
-                        duracao: parseInt(duracao), 
-                        idDiretor: parseInt(idDiretor),
-                        generos: generosSelecionados
-                    })
-                });
-
-                const dados = await resposta.json();
-
-                if (resposta.ok) {
-                    mensagem.classList.add("msg-sucesso");
-                    mensagem.innerText = dados.mensagem || "Filme cadastrado com sucesso!";
-
-            
-                    document.getElementById("nome").value = "";
-                    document.getElementById("dataLancamento").value = "";
-                    document.getElementById("duracao").value = "";
-                    document.getElementById("idDiretor").value = "";
-                    document.getElementById("classificacao").value = "livre";
-
-                } else {
-                    mensagem.classList.add("msg-erro");
-                    mensagem.innerText = dados.erro || "Erro ao cadastrar o filme.";
-                }
-
-            } catch (erro) {
-                mensagem.classList.add("msg-erro");
-                mensagem.innerText = "Erro ao conectar com o servidor.";
-                console.error(erro);
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>

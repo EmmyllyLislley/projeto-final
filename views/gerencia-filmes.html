@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>CineLog - Gerenciar Filmes</title>
+    <style>
+        body { background: #090b11; color: white; font-family: sans-serif; padding: 20px; }
+        input, select { padding: 8px; margin: 5px; background: #0d111a; color: white; border: 1px solid #262f45; width: 180px; }
+        button { padding: 8px 15px; margin: 5px; cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #1e2638; padding: 10px; text-align: left; }
+        th { background: #151a26; }
+    </style>
+</head>
+<body>
+
+    <h2>🎬 Central de Filmes (CRUD Completo)</h2>
+    
+    <input type="hidden" id="filme-id">
+    <input type="text" id="filme-nome" placeholder="Nome do Filme">
+    <input type="date" id="filme-data">
+    <input type="number" id="filme-duracao" placeholder="Duração (min)">
+    <input type="number" id="filme-diretor" placeholder="ID do Diretor">
+    
+    <select id="filme-classe">
+        <option value="livre">Livre</option>
+        <option value="12">12+</option>
+        <option value="14">14+</option>
+        <option value="16">16+</option>
+        <option value="18">18+</option>
+    </select>
+
+    <button onclick="salvar()" style="background: #2563eb; color: white;">Salvar Filme</button>
+    <button onclick="limpar()" style="background: gray; color: white;">Limpar</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Lançamento</th>
+                <th>Duração</th>
+                <th>Classificação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-corpo"></tbody>
+    </table>
+
+    <script>
+        const API = "http://localhost:3000/filmes";
+
+        document.addEventListener("DOMContentLoaded", listar);
+
+        // 1. LISTAR (Chama seu filmeDAO.listar)
+        async function listar() {
+            const res = await fetch(API);
+            const dados = await res.json();
+            const lista = dados.filmes || dados; // Trata se vier array direto ou objeto
+            
+            document.getElementById("tabela-corpo").innerHTML = lista.map(f => `
+                <tr>
+                    <td>${f.id}</td>
+                    <td>${f.nome}</td>
+                    <td>${f.data_lancamento ? f.data_lancamento.split('T')[0] : ''}</td>
+                    <td>${f.duracao}</td>
+                    <td>${f.classificacao_indicativa}</td>
+                    <td>
+                        <button onclick="prepararEditar(${f.id}, '${f.nome}', '${f.data_lancamento}', ${f.duracao}, '${f.classificacao_indicativa}')" style="background: yellow; color: black;">Editar</button>
+                        <button onclick="deletar(${f.id})" style="background: red; color: white;">X</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 2. CADASTRAR / ALTERAR (Chama seu filmeService.cadastrar ou atualizar)
+        async function salvar() {
+            const id = document.getElementById("filme-id").value;
+            const nome = document.getElementById("filme-nome").value;
+            const dataLancamento = document.getElementById("filme-data").value;
+            const duracao = document.getElementById("filme-duracao").value;
+            const idDiretor = document.getElementById("filme-diretor").value;
+            const classificacaoIndicativa = document.getElementById("filme-classe").value;
+
+            // Se tem ID no campo oculto, faz PUT (atualizar). Se não tem, faz POST (cadastrar)
+            const metodo = id ? "PUT" : "POST";
+            const url = id ? `${API}/${id}` : API;
+
+            const res = await fetch(url, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome, dataLancamento, duracao, idDiretor, classificacaoIndicativa })
+            });
+
+            if (res.ok) {
+                alert("Sucesso!");
+                limpar();
+                listar();
+            } else {
+                const erro = await res.json();
+                alert("Erro: " + (erro.erro || "Falha na requisição"));
+            }
+        }
+
+        // 3. REMOVER (Chama seu filmeService.remover)
+        async function deletar(id) {
+            if (confirm("Deseja realmente excluir este filme?")) {
+                await fetch(`${API}/${id}`, { method: "DELETE" });
+                listar();
+            }
+        }
+
+        // Preenche os campos de cima para permitir a alteração
+        function prepararEditar(id, nome, data, duracao, classe) {
+            document.getElementById("filme-id").value = id;
+            document.getElementById("filme-nome").value = nome;
+            document.getElementById("filme-data").value = data ? data.split('T')[0] : "";
+            document.getElementById("filme-duracao").value = duracao;
+            document.getElementById("filme-classe").value = classe;
+        }
+
+        function limpar() {
+            document.getElementById("filme-id").value = "";
+            document.getElementById("filme-nome").value = "";
+            document.getElementById("filme-data").value = "";
+            document.getElementById("filme-duracao").value = "";
+            document.getElementById("filme-diretor").value = "";
+        }
+    </script>
+</body>
+</html>

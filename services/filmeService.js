@@ -89,16 +89,20 @@ class FilmeService {
     }
 
     async remover(id) {
-        if (!id) throw new Error("ID é obrigatório");
+    if (!id) throw new Error("ID é obrigatório");
 
-        const titulo = await this.tituloDAO.buscarPorId(id);
-        if (!titulo) {
-            throw new Error("Filme não encontrado");
-        }
-
-        await this.filmeDAO.remover(id);
-        await this.tituloDAO.remover(id);
+    // 1. Verifica se o filme realmente existe antes de tentar deletar
+    const titulo = await this.tituloDAO.buscarPorId(id);
+    if (!titulo) {
+        throw new Error("Filme não encontrado");
     }
+
+    // 2. IMPORTANTE: Deleta primeiro da tabela 'filmes' (filha)
+    await this.filmeDAO.remover(id);
+
+    // 3. AGORA SIM: Deleta da tabela 'titulos' (mãe) para sumir completamente
+    await this.tituloDAO.remover(id);
+}
 
     async listar() {
         return await this.filmeDAO.listar();

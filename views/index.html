@@ -38,6 +38,7 @@
             <h3>Filmes Cadastrados</h3>
             <div id="lista-filmes" style="margin-top:20px;">Carregando...</div>
         </div>
+        
 
         <div id="tela-usuarios" class="secao">
             <h3>Lista de Usuários</h3>
@@ -72,68 +73,72 @@
         const containerBotoes = document.getElementById("botoes-autenticacao");
 
         if (token) {
-          
+            containerBotoes.innerHTML = `<a href="#" onclick="logout()" style="background: #ef4444;">Sair</a>`;
+        } else {
+            // Se não quiser que o sistema obrigue o login no teste, comente a linha abaixo:
+            window.location.href = "login.html"; 
             containerBotoes.innerHTML = `
-                <a href="#" onclick="logout()" style="background: #ef4444;">Sair</a>
-            `;
-            
-        } if(!token) {
-            window.location.href = "login.html" 
-            containerBotoes.innerHTML = `
-                <a href="/views/login.html">Login</a>
-                <a href="/views/cadastro.html">Cadastro</a>
+                <a href="login.html">Login</a>
+                <a href="cadastro.html">Cadastro</a>
             `;
         }
 
+        // Carrega os dados se não for redirecionado
+        pegarFilmes();
+        pegarUsuarios();
+        pegarDiretores();
     });
-
 
     function logout() {
         localStorage.removeItem("token");
         window.location.reload(); 
     }
+
     function mudarAba(idDaTela, botaoClicado) {
+        document.querySelectorAll('.secao').forEach(tela => tela.classList.remove('ativa'));
+        document.querySelectorAll('.btn-menu').forEach(btn => btn.classList.remove('ativo'));
+        document.getElementById(idDaTela).classList.add('ativa');
+        botaoClicado.classList.add('ativo');
+    }
 
-            document.querySelectorAll('.secao').forEach(tela => tela.classList.remove('ativa'));
-
-            document.querySelectorAll('.btn-menu').forEach(btn => btn.classList.remove('ativo'));
-
-
-            document.getElementById(idDaTela).classList.add('ativa');
-
-            botaoClicado.classList.add('ativo');
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            pegarFilmes();
-            pegarUsuarios();
-            pegarDiretores();
-        });
-
-        async function pegarFilmes() {
+    async function pegarFilmes() {
+        try {
             const res = await fetch("http://localhost:3000/filmes");
             const dados = await res.json();
-  
-            document.getElementById("lista-filmes").innerHTML = dados.filmes.map(f => `
-                <p>• <b>${f.nome}</b> - ${f.duracao} min</p>
+            const lista = dados.filmes || dados; // Trata se vier array direto ou objeto
+            document.getElementById("lista-filmes").innerHTML = lista.map(f => `
+                <p>• <b>${f.nome}</b> - ${f.duracao}</p>
             `).join('');
+        } catch {
+            document.getElementById("lista-filmes").innerText = "Erro ao carregar filmes.";
         }
+    }
 
-        async function pegarUsuarios() {
+    async function pegarUsuarios() {
+        try {
             const res = await fetch("http://localhost:3000/usuarios");
             const dados = await res.json();
-            document.getElementById("lista-usuarios").innerHTML = dados.usuarios.map(u => `
+            const lista = dados.usuarios || dados;
+            document.getElementById("lista-usuarios").innerHTML = lista.map(u => `
                 <tr><td>#${u.id}</td><td>${u.email}</td></tr>
             `).join('');
+        } catch {
+            document.getElementById("lista-usuarios").innerHTML = "<tr><td colspan='2'>Erro ao carregar</td></tr>";
         }
+    }
 
-        async function pegarDiretores() {
+    async function pegarDiretores() {
+        try {
             const res = await fetch("http://localhost:3000/diretores");
             const dados = await res.json();
-            document.getElementById("lista-diretores").innerHTML = dados.diretores.map(d => `
+            const lista = dados.diretores || dados;
+            document.getElementById("lista-diretores").innerHTML = lista.map(d => `
                 <tr><td>#${d.id}</td><td>${d.nome}</td></tr>
             `).join('');
+        } catch {
+            document.getElementById("lista-diretores").innerHTML = "<tr><td colspan='2'>Erro ao carregar</td></tr>";
         }
+    }
 </script>
 
 </body>
