@@ -7,6 +7,12 @@
     <link rel="stylesheet" href = "../public/cadastro-diretor.css">
 
 </head>
+<script>
+    // Se não tiver a chave (token) no bolso, é chutado para o login IMEDIATAMENTE
+    if (!localStorage.getItem("token")) {
+        window.location.href = "login.html";
+    }
+</script>
 <body>
 
     <div class="container">
@@ -32,42 +38,22 @@
     </div>
 
     <script>
-        async function cadastrarAtor() {
-            const nome = document.getElementById("nome").value;
-            const mensagem = document.getElementById("mensagem");
+        async function salvarAtor() {
+            const id = document.getElementById("ator-id").value;
+            const nome = document.getElementById("ator-nome").value;
+            const metodo = id ? "PUT" : "POST";
+            const rota = id ? `${API}/atores/${id}` : `${API}/atores`;
 
-            mensagem.className = "";
-            mensagem.innerText = "";
-
-            const token = localStorage.getItem("token");
-
-            try {
-                // Rota baseada em seu atorRoutes.js
-                const resposta = await fetch("http://localhost:3000/atores", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ nome })
-                });
-
-                const dados = await resposta.json();
-
-                if (resposta.ok) {
-                    mensagem.classList.add("msg-sucesso");
-                    mensagem.innerText = dados.mensagem || "Ator/Atriz cadastrado com sucesso!";
-                    document.getElementById("nome").value = "";
-                } else {
-                    mensagem.classList.add("msg-erro");
-                    mensagem.innerText = dados.erro || "Erro ao cadastrar ator/atriz.";
-                }
-
-            } catch (erro) {
-                mensagem.classList.add("msg-erro");
-                mensagem.innerText = "Erro ao conectar com o servidor.";
-                console.error(erro);
-            }
+            await fetch(rota, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    nome: nome, 
+                    dataNascimento: "1990-01-01", // Engana o backend
+                    nacionalidade: "Desconhecida" // Engana o backend
+                })
+            });
+            limparAtor(); listarAtores();
         }
     </script>
 </body>

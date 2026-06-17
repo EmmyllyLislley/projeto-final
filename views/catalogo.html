@@ -7,7 +7,14 @@
     <link rel="stylesheet" href="../public/catalogo.css">
     
 
+
 </head>
+<script>
+    // Se não tiver a chave (token) no bolso, é chutado para o login IMEDIATAMENTE
+    if (!localStorage.getItem("token")) {
+        window.location.href = "login.html";
+    }
+</script>
 <body>
 
     <header>

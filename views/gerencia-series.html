@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>CineLog - Gerenciar Séries</title>
+    <style>
+        body { background: #090b11; color: white; font-family: sans-serif; padding: 20px; }
+        input, select { padding: 8px; margin: 5px; background: #0d111a; color: white; border: 1px solid #262f45; width: 180px; }
+        button { padding: 8px 15px; margin: 5px; cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #1e2638; padding: 10px; text-align: left; }
+        th { background: #151a26; }
+    </style>
+</head>
+<script>
+    if (!localStorage.getItem("token")) {
+        window.location.href = "login.html";
+    }
+</script>
+<body>
+
+    <h2>🎬 Central de Séries</h2>
+    
+    <input type="hidden" id="serie-id">
+    <input type="text" id="serie-nome" placeholder="Nome da Série">
+    <input type="date" id="serie-data">
+    <input type="number" id="serie-temporadas" placeholder="Temporadas">
+    <input type="number" id="serie-episodios" placeholder="Total de Episódios">
+    <input type="number" id="serie-diretor" placeholder="ID do Diretor">
+    
+    <select id="serie-classe">
+        <option value="livre">Livre</option>
+        <option value="10">10+</option>
+        <option value="12">12+</option>
+        <option value="14">14+</option>
+        <option value="16">16+</option>
+        <option value="18">18+</option>
+    </select>
+
+    <button onclick="salvar()" style="background: #2563eb; color: white;">Salvar Série</button>
+    <button onclick="limpar()" style="background: gray; color: white;">Limpar</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Lançamento</th>
+                <th>Temporadas</th>
+                <th>Episódios</th>
+                <th>Classificação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-corpo"></tbody>
+    </table>
+
+    <script>
+        const API = "http://localhost:3000/series";
+
+        document.addEventListener("DOMContentLoaded", listar);
+
+        // Listar Séries
+        async function listar() {
+            const res = await fetch(API);
+            const dados = await res.json();
+            const lista = dados.series || dados; 
+            
+            document.getElementById("tabela-corpo").innerHTML = lista.map(s => `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.nome}</td>
+                    <td>${s.data_lancamento ? s.data_lancamento.split('T')[0] : ''}</td>
+                    <td>${s.temporadas}</td>
+                    <td>${s.total_episodios}</td>
+                    <td>${s.classificacao_indicativa}</td>
+                    <td>
+                        <button onclick="prepararEditar(${s.id}, '${s.nome}', '${s.data_lancamento}', ${s.temporadas}, ${s.total_episodios}, '${s.classificacao_indicativa}')" style="background: yellow; color: black;">Editar</button>
+                        <button onclick="deletar(${s.id})" style="background: red; color: white;">X</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Salvar ou Atualizar Série
+        async function salvar() {
+            const id = document.getElementById("serie-id").value;
+            const nome = document.getElementById("serie-nome").value;
+            const dataLancamento = document.getElementById("serie-data").value;
+            const temporadas = document.getElementById("serie-temporadas").value;
+            const totalEpisodios = document.getElementById("serie-episodios").value;
+            const idDiretor = document.getElementById("serie-diretor").value;
+            const classificacaoIndicativa = document.getElementById("serie-classe").value;
+
+            const metodo = id ? "PUT" : "POST";
+            const url = id ? `${API}/${id}` : API;
+
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(url, {
+                method: metodo,
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ nome, dataLancamento, temporadas, totalEpisodios, idDiretor, classificacaoIndicativa })
+            });
+
+            if (res.ok) {
+                alert("Sucesso!");
+                limpar();
+                listar();
+            } else {
+                const erro = await res.json();
+                alert("Erro: " + (erro.erro || "Falha na requisição"));
+            }
+        }
+
+        // Deletar Série
+        async function deletar(id) {
+            if (confirm("Deseja realmente excluir esta série?")) {
+                const token = localStorage.getItem("token");
+                await fetch(`${API}/${id}`, { 
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                listar();
+            }
+        }
+
+        // Preparar dados para a Edição
+        function prepararEditar(id, nome, data, temporadas, episodios, classe) {
+            document.getElementById("serie-id").value = id;
+            document.getElementById("serie-nome").value = nome;
+            document.getElementById("serie-data").value = data ? data.split('T')[0] : "";
+            document.getElementById("serie-temporadas").value = temporadas;
+            document.getElementById("serie-episodios").value = episodios;
+            document.getElementById("serie-classe").value = classe;
+        }
+
+        // Limpar Campos do Formulário
+        function limpar() {
+            document.getElementById("serie-id").value = "";
+            document.getElementById("serie-nome").value = "";
+            document.getElementById("serie-data").value = "";
+            document.getElementById("serie-temporadas").value = "";
+            document.getElementById("serie-episodios").value = "";
+            document.getElementById("serie-diretor").value = "";
+            document.getElementById("serie-classe").value = "livre";
+        }
+    </script>
+</body>
+</html>

@@ -116,16 +116,14 @@ class UsuarioController {
 
     async listar(req, res) {
         try {
+            // Chama a função que criamos no Service
             const usuarios = await this.usuarioService.listar();
-
-            res.status(200).json({
-                mensagem: "Lista de usuários",
-                usuarios,
-            });
-        } catch (err) {
-            res.status(400).json({
-                erro: err.message,
-            });
+            
+            // Devolve pro Front-end o JSON com sucesso (Status 200)
+            res.status(200).json({ usuarios });
+        } catch (erro) {
+            console.error("Erro ao listar usuários:", erro);
+            res.status(500).json({ erro: "Erro interno ao buscar usuários." });
         }
     }
 

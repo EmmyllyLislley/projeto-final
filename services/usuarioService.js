@@ -151,7 +151,12 @@ class UsuarioService {
         usuario.alterarSenha(String(senhaAtual), novaSenhaStr);
 
         return await this.usuarioDAO.setValue(usuario.id, usuario.senha);
+    }    
+    
+    async listar() {
+        return await this.usuarioDAO.listar();
     }
+
 
     async remover(id) {
         if (!id) {

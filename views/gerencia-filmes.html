@@ -12,9 +12,14 @@
         th { background: #151a26; }
     </style>
 </head>
+<script>
+    if (!localStorage.getItem("token")) {
+        window.location.href = "login.html";
+    }
+</script>
 <body>
 
-    <h2>🎬 Central de Filmes (CRUD Completo)</h2>
+    <h2>🎬 Central de Filmes</h2>
     
     <input type="hidden" id="filme-id">
     <input type="text" id="filme-nome" placeholder="Nome do Filme">
@@ -52,18 +57,18 @@
 
         document.addEventListener("DOMContentLoaded", listar);
 
-        // 1. LISTAR (Chama seu filmeDAO.listar)
+        
         async function listar() {
             const res = await fetch(API);
             const dados = await res.json();
-            const lista = dados.filmes || dados; // Trata se vier array direto ou objeto
+            const lista = dados.filmes || dados; 
             
             document.getElementById("tabela-corpo").innerHTML = lista.map(f => `
                 <tr>
                     <td>${f.id}</td>
                     <td>${f.nome}</td>
                     <td>${f.data_lancamento ? f.data_lancamento.split('T')[0] : ''}</td>
-                    <td>${f.duracao}</td>
+                    <td>${parseInt(f.duracao)} min</td>
                     <td>${f.classificacao_indicativa}</td>
                     <td>
                         <button onclick="prepararEditar(${f.id}, '${f.nome}', '${f.data_lancamento}', ${f.duracao}, '${f.classificacao_indicativa}')" style="background: yellow; color: black;">Editar</button>
@@ -73,7 +78,7 @@
             `).join('');
         }
 
-        // 2. CADASTRAR / ALTERAR (Chama seu filmeService.cadastrar ou atualizar)
+        
         async function salvar() {
             const id = document.getElementById("filme-id").value;
             const nome = document.getElementById("filme-nome").value;
@@ -82,7 +87,7 @@
             const idDiretor = document.getElementById("filme-diretor").value;
             const classificacaoIndicativa = document.getElementById("filme-classe").value;
 
-            // Se tem ID no campo oculto, faz PUT (atualizar). Se não tem, faz POST (cadastrar)
+           
             const metodo = id ? "PUT" : "POST";
             const url = id ? `${API}/${id}` : API;
 
@@ -102,7 +107,7 @@
             }
         }
 
-        // 3. REMOVER (Chama seu filmeService.remover)
+        
         async function deletar(id) {
             if (confirm("Deseja realmente excluir este filme?")) {
                 await fetch(`${API}/${id}`, { method: "DELETE" });
@@ -110,7 +115,7 @@
             }
         }
 
-        // Preenche os campos de cima para permitir a alteração
+        
         function prepararEditar(id, nome, data, duracao, classe) {
             document.getElementById("filme-id").value = id;
             document.getElementById("filme-nome").value = nome;

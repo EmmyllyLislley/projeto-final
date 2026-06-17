@@ -24,7 +24,13 @@
         <button class="btn-menu" onclick="mudarAba('tela-diretores', this)">🎥 Diretores</button>
         <hr style="border-color: #1e2638; margin: 10px 0;">
         <button onclick="window.location.href='cadastro-filme.html'">➕ Novo Filme</button>
+        <button onclick="window.location.href='cadastro-serie.html'">➕ Nova Série</button>
+        <button onclick="window.location.href='cadastro-ator.html'">➕ Novo Ator</button>
         <button onclick="window.location.href='cadastro-diretor.html'">➕ Novo Diretor</button>
+        <button onclick="window.location.href='gerencia-filmes.html'">Gerenciador (Filmes)</button>
+        <button onclick="window.location.href='gerencia-series.html'">Gerenciador (Séries)</button>
+        <button onclick="window.location.href='gerenciador.html'">Gerenciador (Gêneros e Atores)</button>
+
     </div>
 
     <section class="hero">
@@ -75,7 +81,6 @@
         if (token) {
             containerBotoes.innerHTML = `<a href="#" onclick="logout()" style="background: #ef4444;">Sair</a>`;
         } else {
-            // Se não quiser que o sistema obrigue o login no teste, comente a linha abaixo:
             window.location.href = "login.html"; 
             containerBotoes.innerHTML = `
                 <a href="login.html">Login</a>
@@ -83,7 +88,6 @@
             `;
         }
 
-        // Carrega os dados se não for redirecionado
         pegarFilmes();
         pegarUsuarios();
         pegarDiretores();
@@ -114,18 +118,37 @@
         }
     }
 
-    async function pegarUsuarios() {
-        try {
-            const res = await fetch("http://localhost:3000/usuarios");
-            const dados = await res.json();
-            const lista = dados.usuarios || dados;
-            document.getElementById("lista-usuarios").innerHTML = lista.map(u => `
-                <tr><td>#${u.id}</td><td>${u.email}</td></tr>
-            `).join('');
-        } catch {
-            document.getElementById("lista-usuarios").innerHTML = "<tr><td colspan='2'>Erro ao carregar</td></tr>";
+async function pegarUsuarios() {
+    try {
+        const token = localStorage.getItem("token"); // Pega a carteirinha
+        
+        const res = await fetch("http://localhost:3000/usuarios", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}` // Manda a carteirinha
+            }
+        });
+        
+        const dados = await res.json();
+        
+        if (!res.ok) {
+            console.log("Erro do back:", dados);
+            document.getElementById("lista-usuarios").innerHTML = `<tr><td colspan='2'>${dados.erro}</td></tr>`;
+            return;
         }
+
+        const lista = dados.usuarios || dados;
+        document.getElementById("lista-usuarios").innerHTML = lista.map(u => `
+            <tr>
+                <td>#${u.id}</td>
+                <td>${u.email}</td>
+                <td><button onclick="deletarUsuario(${u.id})" style="background: red; color: white;">Excluir</button></td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        document.getElementById("lista-usuarios").innerHTML = "<tr><td colspan='2'>Erro de conexão</td></tr>";
     }
+}
 
     async function pegarDiretores() {
         try {
@@ -139,6 +162,14 @@
             document.getElementById("lista-diretores").innerHTML = "<tr><td colspan='2'>Erro ao carregar</td></tr>";
         }
     }
+    async function deletarUsuario(id) {
+    if (confirm("Deletar usuário?")) {
+        await fetch(`http://localhost:3000/usuarios/${id}`, { 
+            method: "DELETE" 
+        });
+        pegarUsuarios(); // Recarrega a lista
+    }
+}
 </script>
 
 </body>

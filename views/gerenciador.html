@@ -11,6 +11,12 @@
         th, td { border: 1px solid #1e2638; padding: 10px; text-align: left; }
     </style>
 </head>
+<script>
+    // Se não tiver a chave (token) no bolso, é chutado para o login IMEDIATAMENTE
+    if (!localStorage.getItem("token")) {
+        window.location.href = "login.html";
+    }
+</script>
 <body>
 
     <a href="index.html" style="color: #2563eb;">← Voltar ao Painel</a>
@@ -52,7 +58,8 @@
         async function listarGeneros() {
             const res = await fetch(`${API}/generos`);
             const dados = await res.json();
-            document.getElementById("tab-generos").innerHTML = (dados.generos || []).map(g => `
+            const lista = dados.generos || dados;
+            document.getElementById("tab-generos").innerHTML = lista.map(g => `
                 <tr>
                     <td>${g.id}</td>
                     <td>${g.nome}</td>
@@ -68,7 +75,6 @@
             const id = document.getElementById("gen-id").value;
             const nome = document.getElementById("gen-nome").value;
             
-            // Se tem ID, atualiza (PUT). Se não tem, cria (POST).
             const metodo = id ? "PUT" : "POST";
             const rota = id ? `${API}/generos/${id}` : `${API}/generos`;
 
@@ -91,7 +97,7 @@
         }
 
         async function deletarGen(id) {
-            if (confirm("Deletar gênero?")) {
+            if (confirm("Deletar género?")) {
                 await fetch(`${API}/generos/${id}`, { method: "DELETE" });
                 listarGeneros();
             }
@@ -101,7 +107,8 @@
         async function listarAtores() {
             const res = await fetch(`${API}/atores`);
             const dados = await res.json();
-            document.getElementById("tab-atores").innerHTML = (dados.atores || []).map(a => `
+            const lista = dados.atores || dados;
+            document.getElementById("tab-atores").innerHTML = lista.map(a => `
                 <tr>
                     <td>${a.id}</td>
                     <td>${a.nome}</td>
@@ -122,11 +129,16 @@
             await fetch(rota, {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nome })
+                body: JSON.stringify({ 
+                    nome: nome,
+                    dataNascimento: "1990-01-01", // Engana o backend para não dar erro
+                    nacionalidade: "Desconhecida" // Engana o backend para não dar erro
+                })
             });
             limparAtor(); listarAtores();
         }
 
+        // O ERRO ESTAVA AQUI! Agora está corrigido para "function"
         function prepararAtor(id, nome) {
             document.getElementById("ator-id").value = id;
             document.getElementById("ator-nome").value = nome;

@@ -91,16 +91,16 @@ class FilmeService {
     async remover(id) {
     if (!id) throw new Error("ID é obrigatório");
 
-    // 1. Verifica se o filme realmente existe antes de tentar deletar
+   
     const titulo = await this.tituloDAO.buscarPorId(id);
     if (!titulo) {
         throw new Error("Filme não encontrado");
     }
 
-    // 2. IMPORTANTE: Deleta primeiro da tabela 'filmes' (filha)
+  
     await this.filmeDAO.remover(id);
 
-    // 3. AGORA SIM: Deleta da tabela 'titulos' (mãe) para sumir completamente
+  
     await this.tituloDAO.remover(id);
 }
 
@@ -120,7 +120,7 @@ class FilmeService {
     }
 
     async vincularGeneros(idFilme, listaGeneros) {
-        if(!idFIlme) throw new Error("ID do filme inválido para vincular gêneros");
+        if(!idFilme) throw new Error("ID do filme inválido para vincular gêneros");
 
         for (const idGenero of listaGeneros) {
             await this.tituloDAO.cadastrarRelacaoGenero(idFilme, idGenero)
