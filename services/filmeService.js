@@ -79,7 +79,7 @@ class FilmeService {
             dataLancamento,
             classificacaoIndicativa,
             idDiretor,
-            duracao,
+            duracao
         );
 
         await this.tituloDAO.atualizar(id, filme);
@@ -113,6 +113,14 @@ class FilmeService {
         }
 
         return await this.filmeDAO.buscarPorId(id);
+    }
+
+    async vincularGeneros(idFilme, listaGeneros) {
+        if(!idFIlme) throw new Error("ID do filme inválido para vincular gêneros");
+
+        for (const idGenero of listaGeneros) {
+            await this.tituloDAO.cadastrarRelacaoGenero(idFilme, idGenero)
+        }
     }
 }
 

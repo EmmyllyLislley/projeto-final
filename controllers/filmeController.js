@@ -13,6 +13,7 @@ class FilmeController {
                 classificacaoIndicativa,
                 duracao,
                 idDiretor,
+                generos
             } = req.body;
 
             const filme = await this.filmeService.cadastrar(
@@ -22,6 +23,10 @@ class FilmeController {
                 duracao,
                 idDiretor,
             );
+
+            if(generos && generos.length > 0) {
+                await this.filmeService.vincularGeneros(filme.id, generos)
+            }
 
             res.status(201).json({
                 mensagem: "Filme cadastrado com sucesso!",
